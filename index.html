@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="VS 2026">
+<meta name="theme-color" content="#e84200">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
 <title>Vainstream 2026</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -49,7 +53,7 @@ var DAYS={
   mastership:{label:"🛹 MMM",full:"Monster Mastership",ds:null,de:null}
 };
 
-var state={day:"friday",view:"all",sel:new Map(),alias:"",allPlans:{},chatMsgs:[]};
+var state={day:"friday",view:"all",sel:new Map(),alias:"",allPlans:{},chatMsgs:[],avatar:""};
 var fbOff=null;
 
 function toMin(t){var p=t.split(":"),h=+p[0],m=+p[1];return h<6?(h+24)*60+m:h*60+m;}
@@ -119,7 +123,7 @@ function savePlan(){
       if(p)plan[d][p].push(a.name);
     });
   });
-  db.ref("/plans/"+state.alias).set(plan);
+  plan.avatar=state.avatar;db.ref("/plans/"+state.alias).set(plan);
 }
 
 function loadFromFirebase(plan){
@@ -141,6 +145,73 @@ function setAlias(name){
   });
 }
 
+
+var COOL_EMOJIS=[
+  "🎸","🎵","🎤","🥁","🎹","🎺",
+  "🤘","👊","🔥","💀","⚡","🌪️",
+  "🦁","🐺","🐅","🐲","🦊","🐍",
+  "🏄","🛹","🏆","⚔️","🎯","🤙",
+  "🌊","🎙️","🌙","☠️","🎪","🦸"
+];
+
+function renderProfileOverlay(){
+  var overlay=e("div",{position:"fixed",top:"0",left:"0",right:"0",bottom:"0",
+    background:"rgba(0,0,0,0.5)",zIndex:"999",display:"flex",
+    alignItems:"center",justifyContent:"center",padding:"20px"});
+  var box=e("div",{background:C.surface,borderRadius:"16px",padding:"24px 20px",
+    maxWidth:"340px",width:"100%",boxShadow:"0 8px 32px rgba(0,0,0,0.2)"});
+
+  // Header
+  var hdr=e("div",{display:"flex",alignItems:"center",gap:"12px",marginBottom:"20px"});
+  var bigAvatar=e("div",{fontSize:"40px",lineHeight:"1"});
+  bigAvatar.appendChild(tx(state.avatar||"👤"));
+  hdr.appendChild(bigAvatar);
+  var hdrInfo=e("div",{});
+  hdrInfo.appendChild(e("div",{fontSize:"18px",fontWeight:"900",color:C.text1},[tx(state.alias)]));
+  hdrInfo.appendChild(e("div",{fontSize:"11px",color:C.text3,marginTop:"2px"},[tx("Tippe ein Emoji um es als Avatar zu setzen")]));
+  hdr.appendChild(hdrInfo);
+  box.appendChild(hdr);
+
+  // Emoji grid
+  var grid=e("div",{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"6px",marginBottom:"20px"});
+  COOL_EMOJIS.forEach(function(em){
+    var btn=e("div",{
+      fontSize:"24px",textAlign:"center",padding:"8px 4px",borderRadius:"8px",cursor:"pointer",
+      background:state.avatar===em?C.accent+"22":C.surface2,
+      border:"2px solid "+(state.avatar===em?C.accent:"transparent"),
+      transition:"all 0.15s"
+    });
+    btn.appendChild(tx(em));
+    btn.addEventListener("click",function(){
+      state.avatar=em;
+      savePlan();
+      document.body.removeChild(overlay);
+      render();
+    });
+    grid.appendChild(btn);
+  });
+  box.appendChild(grid);
+
+  // Buttons
+  var btns=e("div",{display:"flex",gap:"8px"});
+  var changeBtn=e("button",{flex:"1",padding:"11px",borderRadius:"10px",
+    border:"2px solid "+C.border,background:"transparent",
+    color:C.text2,fontWeight:"700",fontSize:"13px",cursor:"pointer"});
+  changeBtn.appendChild(tx("Name ändern"));
+  changeBtn.addEventListener("click",function(){
+    document.body.removeChild(overlay);
+    changeAlias();
+  });
+  var closeBtn=e("button",{flex:"1",padding:"11px",borderRadius:"10px",
+    border:"none",background:C.accent,color:"#fff",fontWeight:"800",fontSize:"13px",cursor:"pointer"});
+  closeBtn.appendChild(tx("Schließen"));
+  closeBtn.addEventListener("click",function(){document.body.removeChild(overlay);});
+  btns.appendChild(changeBtn);btns.appendChild(closeBtn);
+  box.appendChild(btns);
+
+  overlay.addEventListener("click",function(ev){if(ev.target===overlay)document.body.removeChild(overlay);});
+  document.body.appendChild(overlay);
+}
 function changeAlias(){
   if(!confirm("Name ändern?"))return;
   if(fbOff){fbOff();fbOff=null;}
@@ -222,6 +293,8 @@ function updateChatMsgs(container){
       var row=e("div",{display:"flex",flexDirection:"column",alignItems:isMe?"flex-end":"flex-start",marginBottom:"4px"});
       if(showMeta){
         var meta=e("div",{fontSize:"10px",color:C.text3,margin:"8px 4px 3px",fontWeight:"600"});
+        var senderAvatar=(state.allPlans[msg.alias]||{}).avatar||(isMe?state.avatar:"")||"👤";
+        meta.appendChild(e("span",{fontSize:"13px"},[tx(senderAvatar)]));
         meta.appendChild(tx(isMe?"Du · "+ts:msg.alias+" · "+ts));
         row.appendChild(meta);
       }
@@ -346,7 +419,7 @@ function renderHeader(){
   h.appendChild(title);
   var b=e("button",{background:C.surface2,border:"none",color:C.text2,padding:"6px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:"700",cursor:"pointer"});
   b.appendChild(tx("👤 "+state.alias));
-  b.addEventListener("click",changeAlias);
+  b.addEventListener("click",function(){renderProfileOverlay();});
   h.appendChild(b);
   return h;
 }
@@ -489,7 +562,7 @@ function renderTimeline(){
         block.appendChild(sub);
       }
       
-      if(wid>72){
+      if(wid>58){
         var chatBtn=e("div",{
           marginTop:"4px",padding:"2px 6px",borderRadius:"8px",
           background:isDef?"rgba(255,255,255,0.25)":stage.color+"22",
