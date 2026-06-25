@@ -270,9 +270,8 @@ function renderControls(){
 }
 
 function renderChat(){
-  var HEADER_H=160;
-  var root=e("div",{display:"flex",flexDirection:"column",background:C.bg,height:"calc(100vh - "+HEADER_H+"px)"});
-  var msgs=e("div",{flex:"1",overflowY:"auto",padding:"10px 14px 6px",display:"flex",flexDirection:"column"});
+  var root=e("div",{display:"flex",flexDirection:"column",background:C.bg});
+  var msgs=e("div",{height:"55vh",overflowY:"auto",padding:"10px 14px 6px",display:"flex",flexDirection:"column"});
   msgs.id="vs-chat-msgs";
   updateChatMsgs(msgs);
   root.appendChild(msgs);
@@ -622,7 +621,7 @@ function render(){
   app.appendChild(renderHeader());
   app.appendChild(renderControls());
   // Reminder banner
-  if (state.alias && (state.day==="friday"||state.day==="saturday"||!getFestivalDay())) {
+  if (state.alias && state.day!=="chat" && (state.day==="friday"||state.day==="saturday"||!getFestivalDay())) {
     var rd = e("div", {background:C.bg, borderBottom:"1px solid "+C.border});
     rd.id = "vs-reminder";
     var content = buildReminderContent();
