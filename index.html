@@ -209,6 +209,7 @@ function renderProfileOverlay(){
   btns.appendChild(changeBtn);btns.appendChild(closeBtn);
   box.appendChild(btns);
 
+  overlay.appendChild(box);
   overlay.addEventListener("click",function(ev){if(ev.target===overlay)document.body.removeChild(overlay);});
   document.body.appendChild(overlay);
 }
