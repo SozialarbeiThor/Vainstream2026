@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Vainstream 2026</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#08080a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
+body{background:#f0f0f2;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh}
 button,input{font-family:inherit}
-::-webkit-scrollbar{height:4px;width:4px}
-::-webkit-scrollbar-track{background:#111}
-::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+::-webkit-scrollbar{height:5px;width:5px}
+::-webkit-scrollbar-track{background:#e0e0e4}
+::-webkit-scrollbar-thumb{background:#b0b0b8;border-radius:3px}
 </style>
 </head>
 <body>
@@ -31,23 +31,25 @@ firebase.initializeApp({
 });
 var db=firebase.database();
 
-var PPM=2.4,ROW_H=84,RULER_H=36,SIDEBAR_W=94;
+var PPM=2.5,ROW_H=88,RULER_H=38,SIDEBAR_W=98;
+var C={bg:"#f0f0f2",surface:"#ffffff",surface2:"#e8e8ec",border:"#d0d0d8",text1:"#1a1a1a",text2:"#555560",text3:"#90909a",accent:"#e84200"};
 var STAGES=[
-  {id:"EMP Stage",            short:"EMP",        color:"#ff4500"},
-  {id:"Murder Stage",         short:"MURDER",     color:"#d90429"},
-  {id:"Rocknight Stage",      short:"ROCKNIGHT",  color:"#0096c7"},
-  {id:"Green Hell Club Stage",short:"GREEN HELL", color:"#52b788"}
+  {id:"EMP Stage",            short:"EMP",        color:"#e84200"},
+  {id:"Murder Stage",         short:"MURDER",     color:"#c62828"},
+  {id:"Rocknight Stage",      short:"ROCKNIGHT",  color:"#1565c0"},
+  {id:"Green Hell Club Stage",short:"GREEN HELL", color:"#2e7d32"}
 ];
 var RIDERS=["Tony Magnusson","Mike Crum","Kevin Staab","Hans Puttis Jacobsson","Renton Miller","Nicky Guerrero","Lester Kasai","Anders Tellen"];
 var ACTS={friday:[{"name":"Rise Against","stage":"EMP Stage","start":"21:20","end":"22:30"},{"name":"Social Distortion","stage":"EMP Stage","start":"19:20","end":"20:10"},{"name":"All Time Low","stage":"EMP Stage","start":"17:30","end":"18:20"},{"name":"Set It Off","stage":"EMP Stage","start":"15:55","end":"16:35"},{"name":"I Killed The Prom Queen","stage":"EMP Stage","start":"14:35","end":"15:15"},{"name":"Wargasm","stage":"EMP Stage","start":"13:30","end":"14:00"},{"name":"Landmvrks","stage":"Murder Stage","start":"20:15","end":"21:15"},{"name":"Bury Tomorrow","stage":"Murder Stage","start":"18:25","end":"19:15"},{"name":"Pennywise","stage":"Murder Stage","start":"16:40","end":"17:25"},{"name":"Lionheart","stage":"Murder Stage","start":"15:15","end":"15:55"},{"name":"Dying Wish","stage":"Murder Stage","start":"14:00","end":"14:35"},{"name":"Siamese","stage":"Murder Stage","start":"13:00","end":"13:30"},{"name":"Sleep Theory","stage":"Rocknight Stage","start":"21:45","end":"22:30"},{"name":"The Menzingers","stage":"Rocknight Stage","start":"20:30","end":"21:15"},{"name":"La Dispute","stage":"Rocknight Stage","start":"19:15","end":"20:00"},{"name":"Shoreline","stage":"Rocknight Stage","start":"18:00","end":"18:45"},{"name":"Hi! Spencer","stage":"Rocknight Stage","start":"16:50","end":"17:30"},{"name":"The Ataris","stage":"Rocknight Stage","start":"15:40","end":"16:20"},{"name":"Massendefekt","stage":"Rocknight Stage","start":"14:30","end":"15:10"},{"name":"Still Talk","stage":"Rocknight Stage","start":"13:30","end":"14:00"},{"name":"Get The Shot","stage":"Green Hell Club Stage","start":"00:05","end":"01:00"},{"name":"Haywire","stage":"Green Hell Club Stage","start":"22:45","end":"23:30"},{"name":"End It","stage":"Green Hell Club Stage","start":"20:20","end":"21:00"},{"name":"Death Lens","stage":"Green Hell Club Stage","start":"19:10","end":"19:50"},{"name":"Initiate","stage":"Green Hell Club Stage","start":"18:00","end":"18:40"},{"name":"Whispers","stage":"Green Hell Club Stage","start":"17:00","end":"17:30"},{"name":"Volatile Ways","stage":"Green Hell Club Stage","start":"16:00","end":"16:30"},{"name":"Heartless Human Harvest","stage":"Green Hell Club Stage","start":"15:00","end":"15:30"}],saturday:[{"name":"Architects","stage":"EMP Stage","start":"21:20","end":"22:30"},{"name":"Hollywood Undead","stage":"EMP Stage","start":"19:20","end":"20:10"},{"name":"Bloodywood","stage":"EMP Stage","start":"17:45","end":"18:30"},{"name":"Thrown","stage":"EMP Stage","start":"16:15","end":"16:55"},{"name":"We Came As Romans","stage":"EMP Stage","start":"14:50","end":"15:30"},{"name":"Magnolia Park","stage":"EMP Stage","start":"13:35","end":"14:10"},{"name":"Boundaries","stage":"EMP Stage","start":"12:30","end":"13:00"},{"name":"Sondaschule","stage":"Murder Stage","start":"20:15","end":"21:15"},{"name":"Black Veil Brides","stage":"Murder Stage","start":"18:30","end":"19:20"},{"name":"Grandson","stage":"Murder Stage","start":"17:00","end":"17:45"},{"name":"Alkaline Trio","stage":"Murder Stage","start":"15:35","end":"16:15"},{"name":"Future Palace","stage":"Murder Stage","start":"14:10","end":"14:50"},{"name":"Raum27","stage":"Murder Stage","start":"13:00","end":"13:35"},{"name":"The Pretty Wild","stage":"Murder Stage","start":"12:00","end":"12:30"},{"name":"Suicidal Tendencies","stage":"Rocknight Stage","start":"21:30","end":"22:30"},{"name":"Agnostic Front","stage":"Rocknight Stage","start":"20:15","end":"21:00"},{"name":"Smoke Blow","stage":"Rocknight Stage","start":"19:00","end":"19:45"},{"name":"Dog Eat Dog","stage":"Rocknight Stage","start":"17:50","end":"18:30"},{"name":"Delinquent Habits","stage":"Rocknight Stage","start":"16:40","end":"17:20"},{"name":"Scene Queen","stage":"Rocknight Stage","start":"15:35","end":"16:10"},{"name":"Pöbel MC","stage":"Rocknight Stage","start":"14:30","end":"15:05"},{"name":"The Flatliners","stage":"Rocknight Stage","start":"13:30","end":"14:00"},{"name":"Attic109","stage":"Rocknight Stage","start":"12:30","end":"13:00"},{"name":"The Casualties","stage":"Green Hell Club Stage","start":"00:05","end":"01:00"},{"name":"Ways Away","stage":"Green Hell Club Stage","start":"22:45","end":"23:30"},{"name":"TX2","stage":"Green Hell Club Stage","start":"21:30","end":"22:15"},{"name":"Nevertel","stage":"Green Hell Club Stage","start":"20:20","end":"21:00"},{"name":"TSS","stage":"Green Hell Club Stage","start":"18:40","end":"19:20"},{"name":"Footballhead","stage":"Green Hell Club Stage","start":"17:30","end":"18:10"},{"name":"Mimi Barks","stage":"Green Hell Club Stage","start":"16:30","end":"17:00"},{"name":"Gridiron","stage":"Green Hell Club Stage","start":"15:30","end":"16:00"}]};
 var DAYS={
-  thursday: {label:"Do 25.6.",full:"Donnerstag, 25. Juni", ds:null,  de:null },
-  friday:   {label:"Fr 26.6.",full:"Freitag, 26. Juni",    ds:13*60, de:25*60},
-  saturday: {label:"Sa 27.6.",full:"Samstag, 27. Juni",    ds:12*60, de:25*60},
+  thursday: {label:"Do 25.6.",full:"Donnerstag, 25. Juni",  ds:null,  de:null },
+  friday:   {label:"Fr 26.6.",full:"Freitag, 26. Juni",     ds:13*60, de:25*60},
+  saturday: {label:"Sa 27.6.",full:"Samstag, 27. Juni",     ds:12*60, de:25*60},
   mastership:{label:"🛹 MMM",full:"Monster Mastership",ds:null,de:null}
 };
 
-var state={day:"friday",view:"all",sel:new Set(),alias:"",allPlans:{}};
+// sel: Map of key -> 'definite'|'maybe'
+var state={day:"friday",view:"all",sel:new Map(),alias:"",allPlans:{}};
 var fbOff=null;
 
 function toMin(t){var p=t.split(":"),h=+p[0],m=+p[1];return h<6?(h+24)*60+m:h*60+m;}
@@ -55,12 +57,15 @@ function pad2(n){return String(n).padStart(2,"0");}
 function fmtM(m){return pad2(Math.floor(m/60)%24)+":"+pad2(m%60);}
 function mk(d,n){return d+"::"+n;}
 function stageOf(id){return STAGES.find(function(s){return s.id===id;})||STAGES[0];}
+function getPrio(d,n){return state.sel.get(mk(d,n))||null;}
 
 function getOthers(d,name){
   var out=[];
-  Object.keys(state.allPlans).forEach(function(a){
-    if(a===state.alias)return;
-    if(((state.allPlans[a]||{})[d]||[]).indexOf(name)>=0)out.push(a);
+  Object.keys(state.allPlans).forEach(function(alias){
+    if(alias===state.alias)return;
+    var dp=(state.allPlans[alias]||{})[d]||{};
+    var prio=(dp.definite||[]).indexOf(name)>=0?"definite":(dp.maybe||[]).indexOf(name)>=0?"maybe":null;
+    if(prio)out.push({alias:alias,prio:prio});
   });
   return out;
 }
@@ -99,11 +104,23 @@ function startListener(){
 
 function savePlan(){
   if(!state.alias)return;
-  var plan={friday:[],saturday:[]};
+  var plan={friday:{definite:[],maybe:[]},saturday:{definite:[],maybe:[]}};
   ["friday","saturday"].forEach(function(d){
-    ACTS[d].forEach(function(a){if(state.sel.has(mk(d,a.name)))plan[d].push(a.name);});
+    ACTS[d].forEach(function(a){
+      var p=state.sel.get(mk(d,a.name));
+      if(p)plan[d][p].push(a.name);
+    });
   });
   db.ref("/plans/"+state.alias).set(plan);
+}
+
+function loadFromFirebase(plan){
+  state.sel=new Map();
+  ["friday","saturday"].forEach(function(d){
+    var dp=(plan||{})[d]||{};
+    ((dp.definite)||[]).forEach(function(n){state.sel.set(mk(d,n),"definite");});
+    ((dp.maybe)||[]).forEach(function(n){state.sel.set(mk(d,n),"maybe");});
+  });
 }
 
 function setAlias(name){
@@ -112,63 +129,71 @@ function setAlias(name){
   state.alias=name;
   localStorage.setItem("vs26_alias",name);
   db.ref("/plans/"+name).once("value",function(snap){
-    var plan=snap.val()||{};
-    state.sel=new Set();
-    ["friday","saturday"].forEach(function(d){(plan[d]||[]).forEach(function(n){state.sel.add(mk(d,n));});});
-    startListener();
-    render();
+    loadFromFirebase(snap.val());
+    startListener();render();
   });
 }
 
 function changeAlias(){
-  if(!confirm("Name 00E4ndern? Dein Plan bleibt gespeichert."))return;
+  if(!confirm("Name ändern?"))return;
   if(fbOff){fbOff();fbOff=null;}
   state.alias="";state.allPlans={};
-  localStorage.removeItem("vs26_alias");
-  render();
+  localStorage.removeItem("vs26_alias");render();
 }
+
+function toggleAct(d,name){
+  var k=mk(d,name),cur=state.sel.get(k);
+  if(!cur)state.sel.set(k,"definite");
+  else if(cur==="definite")state.sel.set(k,"maybe");
+  else state.sel.delete(k);
+  savePlan();render();
+}
+
+// ── DOM helpers ───────────────────────────────────────────────────────────────
+function card(style,ch){return e("div",Object.assign({background:C.surface,borderRadius:"12px",padding:"16px"},style||{}),ch);}
+function badge(label,bg,col){return e("div",{display:"inline-flex",alignItems:"center",padding:"2px 8px",borderRadius:"10px",fontSize:"10px",fontWeight:"700",letterSpacing:"0.5px",background:bg,color:col},[tx(label)]);}
 
 // ── Login ─────────────────────────────────────────────────────────────────────
 function renderLogin(){
-  var root=e("div",{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",padding:"32px 24px"});
-  root.appendChild(e("div",{fontSize:"26px",fontWeight:"900",letterSpacing:"3px",color:"#ff4500",marginBottom:"4px"},[tx("VAINSTREAM")]));
-  root.appendChild(e("div",{fontSize:"11px",color:"#555",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"40px"},[tx("2026 · Gruppenplan")]));
-  var card=e("div",{background:"#111116",borderRadius:"14px",padding:"24px 20px",width:"100%",maxWidth:"320px"});
-  card.appendChild(e("div",{fontSize:"13px",color:"#888",marginBottom:"16px",lineHeight:"1.6"},[tx("Wie heißt du? (Spitzname reicht)")]));
+  var root=e("div",{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",padding:"32px 20px",background:C.bg});
+  root.appendChild(e("div",{fontSize:"28px",fontWeight:"900",letterSpacing:"2px",color:C.accent,marginBottom:"4px"},[tx("VAINSTREAM")]));
+  root.appendChild(e("div",{fontSize:"12px",color:C.text3,letterSpacing:"2px",textTransform:"uppercase",marginBottom:"40px"},[tx("2026 · Gruppenplan")]));
+  var wrap=e("div",{background:C.surface,borderRadius:"16px",padding:"24px 20px",width:"100%",maxWidth:"320px",boxShadow:"0 4px 24px rgba(0,0,0,0.10)"});
+  wrap.appendChild(e("div",{fontSize:"14px",color:C.text2,marginBottom:"16px",lineHeight:"1.5"},[tx("Wie heißt du? (Spitzname reicht)")]));
   var inp=document.createElement("input");
-  Object.assign(inp.style,{width:"100%",padding:"13px 14px",borderRadius:"9px",border:"1px solid #2a2a2e",background:"#1a1a1e",color:"#fff",fontSize:"16px",marginBottom:"12px",outline:"none",display:"block"});
-  inp.placeholder="z.B. Thorsten";inp.autocomplete="off";inp.autocorrect="off";
-  var btn=e("button",{width:"100%",padding:"13px",borderRadius:"9px",border:"none",background:"#ff4500",color:"#fff",fontWeight:"800",fontSize:"15px"},[tx("Los geht’s →")]);
+  Object.assign(inp.style,{width:"100%",padding:"13px 14px",borderRadius:"10px",border:"2px solid "+C.border,background:C.bg,color:C.text1,fontSize:"16px",marginBottom:"12px",outline:"none",display:"block"});
+  inp.placeholder="z.B. Thorsten";inp.autocomplete="off";
+  var btn=e("button",{width:"100%",padding:"13px",borderRadius:"10px",border:"none",background:C.accent,color:"#fff",fontWeight:"800",fontSize:"15px",cursor:"pointer"},[tx("Los geht’s →")]);
   btn.addEventListener("click",function(){setAlias(inp.value);});
   inp.addEventListener("keydown",function(ev){if(ev.key==="Enter")setAlias(inp.value);});
-  card.appendChild(inp);card.appendChild(btn);root.appendChild(card);
-  root.appendChild(e("div",{fontSize:"10px",color:"#2a2a2e",marginTop:"20px",textAlign:"center"},[tx("Dein Name wird lokal gespeichert.")]));
+  wrap.appendChild(inp);wrap.appendChild(btn);root.appendChild(wrap);
+  root.appendChild(e("div",{fontSize:"11px",color:C.text3,marginTop:"20px",textAlign:"center"},[tx("Dein Name wird lokal gespeichert")]));
   setTimeout(function(){inp.focus();},80);
   return root;
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────
 function renderHeader(){
-  var h=e("div",{background:"linear-gradient(160deg,#1a0800,#0e0e12)",padding:"12px 14px",borderBottom:"1px solid #1e1e24",display:"flex",alignItems:"center",justifyContent:"space-between"});
+  var h=e("div",{background:C.surface,borderBottom:"1px solid "+C.border,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:"0",zIndex:"50"});
   var left=e("div",{});
   var title=e("div",{fontSize:"18px",fontWeight:"900",letterSpacing:"2px",lineHeight:"1"});
-  title.appendChild(e("span",{color:"#ff4500"},[tx("VAINSTREAM ")]));
-  title.appendChild(e("span",{color:"#fff"},[tx("2026")]));
+  title.appendChild(e("span",{color:C.accent},[tx("VAINSTREAM ")]));
+  title.appendChild(e("span",{color:C.text1},[tx("2026")]));
   left.appendChild(title);
   h.appendChild(left);
-  var badge=e("button",{background:"#1e1e24",border:"none",color:"#aaa",padding:"6px 10px",borderRadius:"20px",fontSize:"11px",fontWeight:"700",display:"flex",alignItems:"center",gap:"5px"});
-  badge.appendChild(tx("👤 "+state.alias));
-  badge.addEventListener("click",changeAlias);
-  h.appendChild(badge);
+  var b=e("button",{background:C.surface2,border:"none",color:C.text2,padding:"6px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:"700",cursor:"pointer"});
+  b.appendChild(tx("👤 "+state.alias));
+  b.addEventListener("click",changeAlias);
+  h.appendChild(b);
   return h;
 }
 
 // ── Controls ──────────────────────────────────────────────────────────────────
 function renderControls(){
-  var wrap=e("div",{padding:"10px 14px 0",background:"#0d0d10",borderBottom:"1px solid #1e1e24"});
+  var wrap=e("div",{padding:"10px 14px 0",background:C.surface,borderBottom:"1px solid "+C.border});
   var tabs=e("div",{display:"flex",gap:"5px",marginBottom:"8px"});
   [{k:"thursday",l:"Do 25.6."},{k:"friday",l:"Fr 26.6."},{k:"saturday",l:"Sa 27.6."},{k:"mastership",l:"🛹 MMM"}].forEach(function(item){
-    var btn=e("button",{flex:"1",padding:"7px 4px",borderRadius:"7px",border:"none",fontWeight:"800",fontSize:"11px",letterSpacing:"0.5px",textTransform:item.k==="mastership"?"none":"uppercase",background:state.day===item.k?"#ff4500":"#18181d",color:state.day===item.k?"#fff":"#555"});
+    var btn=e("button",{flex:"1",padding:"8px 4px",borderRadius:"8px",border:"none",cursor:"pointer",fontWeight:"800",fontSize:"11px",letterSpacing:"0.5px",textTransform:item.k==="mastership"?"none":"uppercase",background:state.day===item.k?C.accent:C.surface2,color:state.day===item.k?"#fff":C.text2,transition:"all 0.15s"});
     btn.appendChild(tx(item.l));
     btn.addEventListener("click",function(){state.day=item.k;if(item.k==="thursday"||item.k==="mastership")state.view="all";render();});
     tabs.appendChild(btn);
@@ -176,13 +201,15 @@ function renderControls(){
   wrap.appendChild(tabs);
   if(state.day==="friday"||state.day==="saturday"){
     var others=Object.keys(state.allPlans).filter(function(a){return a!==state.alias;}).length;
+    var selCount=0;
+    state.sel.forEach(function(v,k){if(k.startsWith(state.day+"::"))selCount++;});
     var views=e("div",{display:"flex",gap:"5px",paddingBottom:"10px"});
     [
-      {k:"all",  l:"Alle Bands"},
-      {k:"mine", l:"Mein Plan"+(state.sel.size?" · "+state.sel.size:"")},
+      {k:"all",l:"Alle Bands"},
+      {k:"mine",l:"Mein Plan"+(selCount?" · "+selCount:"")},
       {k:"gruppe",l:"👥 Gruppe"+(others?" · "+others:"")},
     ].forEach(function(item){
-      var btn=e("button",{flex:"1",padding:"6px 0",borderRadius:"7px",fontWeight:"700",fontSize:"11px",border:"2px solid "+(state.view===item.k?"#ff4500":"#1e1e24"),background:"transparent",color:state.view===item.k?"#ff4500":"#444"});
+      var btn=e("button",{flex:"1",padding:"7px 0",borderRadius:"8px",cursor:"pointer",fontWeight:"700",fontSize:"11px",border:"2px solid "+(state.view===item.k?C.accent:C.border),background:state.view===item.k?"#fff3f0":"transparent",color:state.view===item.k?C.accent:C.text2,transition:"all 0.15s"});
       btn.appendChild(tx(item.l));
       btn.addEventListener("click",function(){state.view=item.k;render();});
       views.appendChild(btn);
@@ -195,28 +222,31 @@ function renderControls(){
 // ── Timeline ──────────────────────────────────────────────────────────────────
 function renderTimeline(){
   var d=state.day,cfg=DAYS[d],totalW=(cfg.de-cfg.ds)*PPM,cf=calcConflicts();
-  var root=e("div",{});
-  // Legend
-  var leg=e("div",{padding:"7px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"#0d0d10",borderBottom:"1px solid #1a1a1e"});
-  var legI=e("div",{display:"flex",gap:"12px",flexWrap:"wrap"});
+  var root=e("div",{background:C.bg});
+  // Legend + hint
+  var leg=e("div",{padding:"8px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",background:C.surface,borderBottom:"1px solid "+C.border});
+  var legI=e("div",{display:"flex",gap:"14px",flexWrap:"wrap",alignItems:"center"});
   STAGES.forEach(function(s){
     var item=e("div",{display:"flex",alignItems:"center",gap:"5px"});
-    item.appendChild(e("div",{width:"9px",height:"9px",borderRadius:"2px",background:s.color}));
-    item.appendChild(e("span",{fontSize:"9px",color:"#666",letterSpacing:"0.5px",fontWeight:"600"},[tx(s.short)]));
+    item.appendChild(e("div",{width:"10px",height:"10px",borderRadius:"3px",background:s.color}));
+    item.appendChild(e("span",{fontSize:"10px",color:C.text2,fontWeight:"600"},[tx(s.short)]));
     legI.appendChild(item);
   });
   leg.appendChild(legI);
-  leg.appendChild(e("span",{fontSize:"9px",color:"#333"},[tx("← scrollen →")]));
+  var hint=e("div",{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"2px"});
+  hint.appendChild(e("div",{fontSize:"9px",color:C.text3},[tx("← scrollen →")]));
+  hint.appendChild(e("div",{fontSize:"9px",color:C.text3},[tx("1×=★ 2×=? 3×=frei")]));
+  leg.appendChild(hint);
   root.appendChild(leg);
   // Scroll
   var scroll=e("div",{overflowX:"auto",WebkitOverflowScrolling:"touch"});
   var wrap=e("div",{display:"flex",minWidth:(SIDEBAR_W+totalW+16)+"px"});
   // Sidebar
-  var sb=e("div",{width:SIDEBAR_W+"px",flexShrink:"0",position:"sticky",left:"0",zIndex:"20",background:"#08080a",borderRight:"1px solid #1a1a1e"});
-  sb.appendChild(e("div",{height:RULER_H+"px",background:"#0d0d10",borderBottom:"1px solid #1a1a1e"}));
+  var sb=e("div",{width:SIDEBAR_W+"px",flexShrink:"0",position:"sticky",left:"0",zIndex:"20",background:C.surface,borderRight:"1px solid "+C.border});
+  sb.appendChild(e("div",{height:RULER_H+"px",background:C.surface2,borderBottom:"1px solid "+C.border}));
   STAGES.forEach(function(s,si){
-    var row=e("div",{height:ROW_H+"px",display:"flex",alignItems:"center",paddingLeft:"10px",borderBottom:"1px solid #141418",background:si%2===0?"#08080a":"#0c0c0f"});
-    var lbl=e("div",{fontSize:"8px",fontWeight:"900",color:s.color,letterSpacing:"0.8px",textTransform:"uppercase",lineHeight:"1.5"});
+    var row=e("div",{height:ROW_H+"px",display:"flex",alignItems:"center",paddingLeft:"10px",borderBottom:"1px solid "+C.border,background:si%2===0?C.surface:C.surface2});
+    var lbl=e("div",{fontSize:"9px",fontWeight:"800",color:s.color,letterSpacing:"0.5px",textTransform:"uppercase",lineHeight:"1.5"});
     s.short.split(" ").forEach(function(w){lbl.appendChild(e("div",{},[tx(w)]));});
     row.appendChild(lbl);sb.appendChild(row);
   });
@@ -224,147 +254,165 @@ function renderTimeline(){
   // Grid
   var grid=e("div",{position:"relative",width:totalW+"px",flexShrink:"0"});
   // Ruler
-  var ruler=e("div",{position:"relative",height:RULER_H+"px",background:"#0d0d10",borderBottom:"1px solid #1a1a1e"});
+  var ruler=e("div",{position:"relative",height:RULER_H+"px",background:C.surface2,borderBottom:"1px solid "+C.border});
   for(var m=cfg.ds;m<=cfg.de;m+=60){
-    var tick=e("div",{position:"absolute",left:((m-cfg.ds)*PPM)+"px",top:"0",bottom:"0",borderLeft:"1px solid #1e1e26",paddingLeft:"5px",display:"flex",alignItems:"center"});
-    tick.appendChild(e("span",{fontSize:"9px",color:"#444",whiteSpace:"nowrap",fontWeight:"600"},[tx(fmtM(m))]));
+    var tick=e("div",{position:"absolute",left:((m-cfg.ds)*PPM)+"px",top:"0",bottom:"0",borderLeft:"1px solid "+C.border,paddingLeft:"5px",display:"flex",alignItems:"center"});
+    tick.appendChild(e("span",{fontSize:"10px",color:C.text2,whiteSpace:"nowrap",fontWeight:"600"},[tx(fmtM(m))]));
     ruler.appendChild(tick);
   }
   grid.appendChild(ruler);
   STAGES.forEach(function(stage,si){
-    var row=e("div",{position:"relative",height:ROW_H+"px",borderBottom:"1px solid #141418",background:si%2===0?"#08080a":"#0c0c0f"});
+    var row=e("div",{position:"relative",height:ROW_H+"px",borderBottom:"1px solid "+C.border,background:si%2===0?C.surface:C.surface2});
     for(var m=cfg.ds;m<=cfg.de;m+=60)
-      row.appendChild(e("div",{position:"absolute",left:((m-cfg.ds)*PPM)+"px",top:"0",bottom:"0",borderLeft:"1px solid #121216"}));
+      row.appendChild(e("div",{position:"absolute",left:((m-cfg.ds)*PPM)+"px",top:"0",bottom:"0",borderLeft:"1px solid "+C.border}));
     ACTS[d].filter(function(a){return a.stage===stage.id;}).forEach(function(act){
       var sOff=toMin(act.start)-cfg.ds,dur=toMin(act.end)-toMin(act.start);
-      var lft=sOff*PPM+2,wid=Math.max(dur*PPM-4,16);
-      var k=mk(d,act.name),isSel=state.sel.has(k),isConf=cf.has(k);
+      var lft=sOff*PPM+2,wid=Math.max(dur*PPM-4,18);
+      var prio=getPrio(d,act.name),isConf=cf.has(mk(d,act.name));
       var others=getOthers(d,act.name);
-      var block=e("div",{position:"absolute",left:lft+"px",top:"5px",width:wid+"px",height:(ROW_H-10)+"px",borderRadius:"5px",cursor:"pointer",padding:"3px 5px",overflow:"hidden",background:isSel?stage.color:stage.color+"22",border:isSel?"2px solid "+stage.color:(isConf?"2px solid #ffd60a":"1px solid "+stage.color+"44"),boxShadow:isSel?"0 0 18px "+stage.color+"55":"none",transition:"box-shadow 0.15s",display:"flex",flexDirection:"column",justifyContent:"center"});
-      var nm=e("div",{fontSize:"9px",fontWeight:isSel?"900":"600",color:isSel?"#fff":"#aaa",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",lineHeight:"1.2"});
-      if(isConf)nm.appendChild(e("span",{color:"#ffd60a"},[tx("⚠ ")]));
-      if(isSel)nm.appendChild(e("span",{},[tx("✓ ")]));
+      var isDef=prio==="definite",isMaybe=prio==="maybe";
+      var block=e("div",{
+        position:"absolute",left:lft+"px",top:"5px",width:wid+"px",height:(ROW_H-10)+"px",
+        borderRadius:"6px",cursor:"pointer",padding:"3px 5px",overflow:"hidden",
+        background:isDef?stage.color:isMaybe?stage.color+"22":"transparent",
+        border:isDef?"2px solid "+stage.color:isMaybe?"2px dashed "+stage.color:"1px solid "+stage.color+"55",
+        boxShadow:isDef?"0 2px 8px "+stage.color+"44":"none",
+        transition:"all 0.15s",display:"flex",flexDirection:"column",justifyContent:"center",
+        outline:isConf?"2px solid #f59e0b":"none",outlineOffset:"-2px"
+      });
+      var nm=e("div",{fontSize:"9px",fontWeight:isDef?"900":"600",color:isDef?"#fff":isMaybe?stage.color:C.text2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",lineHeight:"1.2"});
+      if(isDef)nm.appendChild(e("span",{},[tx("★ ")]));
+      else if(isMaybe)nm.appendChild(e("span",{},[tx("? ")]));
       nm.appendChild(tx(act.name));
       block.appendChild(nm);
-      if(dur*PPM>44)block.appendChild(e("div",{fontSize:"8px",color:isSel?"rgba(255,255,255,0.5)":"#555",marginTop:"1px"},[tx(act.start+"–"+act.end)]));
-      if(others.length>0)block.appendChild(e("div",{fontSize:"8px",color:isSel?"rgba(255,255,255,0.7)":"stage.color",marginTop:"1px",color:stage.color},[tx("👥 "+others.length)]));
-      block.addEventListener("click",function(){
-        if(state.sel.has(k))state.sel.delete(k);else state.sel.add(k);
-        savePlan();render();
-      });
+      if(dur*PPM>50){
+        var sub=e("div",{fontSize:"8px",marginTop:"1px",color:isDef?"rgba(255,255,255,0.75)":C.text3,overflow:"hidden",whiteSpace:"nowrap"});
+        if(others.length>0)sub.appendChild(tx("👥"+others.length+" "));
+        sub.appendChild(tx(act.start+"–"+act.end));
+        block.appendChild(sub);
+      }
+      block.addEventListener("click",function(){toggleAct(d,act.name);});
       row.appendChild(block);
     });
     grid.appendChild(row);
   });
   wrap.appendChild(grid);scroll.appendChild(wrap);root.appendChild(scroll);
   if(d==="saturday"){
-    var banner=e("div",{margin:"10px 14px 0",background:"#0d1a0d",border:"1px solid rgba(82,183,136,0.27)",borderRadius:"10px",padding:"10px 14px",display:"flex",alignItems:"center",gap:"10px"});
+    var banner=e("div",{margin:"10px 14px",background:"#e8f5e9",border:"1px solid #a5d6a7",borderRadius:"10px",padding:"10px 14px",display:"flex",alignItems:"center",gap:"10px"});
     banner.appendChild(e("span",{fontSize:"18px"},[tx("🎉")]));
     var bt=e("div",{});
-    bt.appendChild(e("div",{fontWeight:"800",fontSize:"12px",color:"#52b788"},[tx("Aftershow · Morecore Party")]));
+    bt.appendChild(e("div",{fontWeight:"800",fontSize:"12px",color:"#2e7d32"},[tx("Aftershow · Morecore Party")]));
     bt.appendChild(e("div",{fontSize:"11px",color:"#555",marginTop:"2px"},[tx("Skaters Palace · Sa 27.06. · ab 22:00 · Freier Eintritt mit Bändchen")]));
     banner.appendChild(bt);root.appendChild(banner);
   }
-  root.appendChild(e("div",{padding:"8px 14px",fontSize:"10px",color:"#333",textAlign:"center"},[tx("Antippen = zum Plan hinzufügen / entfernen")]));
+  root.appendChild(e("div",{padding:"6px 14px 12px",fontSize:"10px",color:C.text3,textAlign:"center"},[tx("Antippen: ★ definitiv → ? vielleicht → frei")]));
   return root;
 }
 
 // ── Mein Plan ─────────────────────────────────────────────────────────────────
 function renderMyPlan(){
-  var root=e("div",{padding:"14px 14px 48px"}),cf=calcConflicts();
+  var root=e("div",{padding:"14px 14px 48px",background:C.bg}),cf=calcConflicts();
   var plan=[];
   ["friday","saturday"].forEach(function(d){
-    ACTS[d].filter(function(a){return state.sel.has(mk(d,a.name));}).forEach(function(a){plan.push({name:a.name,stage:a.stage,start:a.start,end:a.end,day:d});});
+    ACTS[d].filter(function(a){return state.sel.has(mk(d,a.name));}).forEach(function(a){
+      plan.push({name:a.name,stage:a.stage,start:a.start,end:a.end,day:d,prio:state.sel.get(mk(d,a.name))});
+    });
   });
-  plan.sort(function(a,b){if(a.day!==b.day)return a.day==="friday"?-1:1;return toMin(a.start)-toMin(b.start);});
+  plan.sort(function(a,b){
+    if(a.day!==b.day)return a.day==="friday"?-1:1;
+    if(a.prio!==b.prio)return a.prio==="definite"?-1:1;
+    return toMin(a.start)-toMin(b.start);
+  });
   if(!plan.length){
-    var emp=e("div",{textAlign:"center",padding:"56px 20px",color:"#333"});
+    var emp=e("div",{textAlign:"center",padding:"56px 20px",color:C.text3});
     emp.appendChild(e("div",{fontSize:"48px",marginBottom:"16px"},[tx("🎸")]));
-    emp.appendChild(e("div",{fontSize:"15px",fontWeight:"800",marginBottom:"8px",color:"#555",letterSpacing:"1px"},[tx("PLAN LEER")]));
-    emp.appendChild(e("div",{fontSize:"12px",color:"#444",lineHeight:"1.7"},[tx("Geh zu „Alle Bands“ und tippe eine Band an.")]));
+    emp.appendChild(e("div",{fontSize:"15px",fontWeight:"800",marginBottom:"8px",color:C.text2},[tx("PLAN LEER")]));
+    emp.appendChild(e("div",{fontSize:"13px",color:C.text3,lineHeight:"1.7"},[tx('In "Alle Bands" eine Band antippen.')]));
     root.appendChild(emp);return root;
   }
   if(cf.size>0){
-    var cb=e("div",{background:"#1f1900",border:"1px solid rgba(255,214,10,0.2)",borderRadius:"8px",padding:"10px 12px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"flex-start"});
-    cb.appendChild(e("span",{fontSize:"14px",color:"#ffd60a",flexShrink:"0"},[tx("⚠")]));
-    cb.appendChild(e("span",{fontSize:"12px",color:"#ffd60a",lineHeight:"1.5"},[tx("Zeitüberschneidung — markierte Acts überlappen sich.")]));
-    root.appendChild(cb);
+    root.appendChild(e("div",{background:"#fff8e1",border:"1px solid #f59e0b",borderRadius:"8px",padding:"10px 12px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"flex-start",fontSize:"12px",color:"#92400e"},[
+      e("span",{flexShrink:"0"},[tx("⚠️")]),
+      tx("Zeitüberschneidung — markierte Acts überlappen sich.")
+    ]));
   }
   ["friday","saturday"].forEach(function(d){
-    var acts=plan.filter(function(a){return a.day===d;});
-    if(!acts.length)return;
-    var grp=e("div",{marginBottom:"20px"});
-    grp.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:"#ff4500",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid #1e1e24"},[tx(DAYS[d].full)]));
-    acts.forEach(function(act){
-      var stg=stageOf(act.stage),k=mk(d,act.name),isConf=cf.has(k);
-      var others=getOthers(d,act.name);
-      var row=e("div",{display:"flex",alignItems:"center",gap:"10px",padding:"11px 12px",marginBottom:"6px",background:"#111116",borderRadius:"9px"});
-      row.style.borderLeft="4px solid "+stg.color;
-      row.style.borderTop="1px solid "+(isConf?"rgba(255,214,10,0.2)":"#1a1a1e");
-      row.style.borderRight="1px solid "+(isConf?"rgba(255,214,10,0.2)":"#1a1a1e");
-      row.style.borderBottom="1px solid "+(isConf?"rgba(255,214,10,0.2)":"#1a1a1e");
-      row.appendChild(e("div",{width:"10px",height:"10px",borderRadius:"3px",background:stg.color,flexShrink:"0"}));
-      var info=e("div",{flex:"1",minWidth:"0"});
-      var nrow=e("div",{fontWeight:"800",fontSize:"13px",display:"flex",alignItems:"center",gap:"6px",marginBottom:"3px"});
-      if(isConf)nrow.appendChild(e("span",{fontSize:"11px",color:"#ffd60a",flexShrink:"0"},[tx("⚠")]));
-      nrow.appendChild(tx(act.name));
-      info.appendChild(nrow);
-      var meta=e("div",{fontSize:"11px",display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"});
-      meta.appendChild(e("span",{color:stg.color,fontWeight:"700",fontSize:"10px"},[tx(stg.short)]));
-      meta.appendChild(e("span",{color:"#2a2a2e"},[tx("·")]));
-      meta.appendChild(e("span",{color:"#555"},[tx(act.start+" – "+act.end)]));
-      if(others.length>0){
-        meta.appendChild(e("span",{color:"#2a2a2e"},[tx("·")]));
-        meta.appendChild(e("span",{color:"#0096c7",fontSize:"10px"},[tx("👥 "+others.join(", "))]));
-      }
-      info.appendChild(meta);
-      row.appendChild(info);
-      var rb=e("button",{background:"#1e1e24",border:"none",color:"#555",fontSize:"15px",width:"26px",height:"26px",borderRadius:"6px",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:"0"});
-      rb.appendChild(tx("×"));
-      (function(k2){rb.addEventListener("click",function(){state.sel.delete(k2);savePlan();render();});})(k);
-      row.appendChild(rb);
-      grp.appendChild(row);
+    ["definite","maybe"].forEach(function(prio){
+      var acts=plan.filter(function(a){return a.day===d&&a.prio===prio;});
+      if(!acts.length)return;
+      var grpHead=e("div",{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px",marginTop:"16px"});
+      grpHead.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:C.text3,letterSpacing:"1.5px",textTransform:"uppercase"},[tx(DAYS[d].full)]));
+      grpHead.appendChild(prio==="definite"?badge("★ DEFINITIV","#fff3e0",C.accent):badge("? VIELLEICHT","#f5f5f5",C.text2));
+      root.appendChild(grpHead);
+      acts.forEach(function(act){
+        var stg=stageOf(act.stage),k=mk(d,act.name),isConf=cf.has(k),isDef=prio==="definite";
+        var others=getOthers(d,act.name);
+        var row=e("div",{display:"flex",alignItems:"center",gap:"10px",padding:"11px 12px",marginBottom:"6px",background:C.surface,borderRadius:"10px",boxShadow:"0 1px 3px rgba(0,0,0,0.06)"});
+        row.style.borderLeft="4px solid "+(isDef?stg.color:stg.color+"88");
+        row.appendChild(e("div",{fontSize:"16px",flexShrink:"0"},[tx(isDef?"★":"?")]));
+        var info=e("div",{flex:"1",minWidth:"0"});
+        var nrow=e("div",{fontWeight:"800",fontSize:"13px",display:"flex",alignItems:"center",gap:"6px",marginBottom:"3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"});
+        if(isConf)nrow.appendChild(e("span",{color:"#f59e0b",flexShrink:"0"},[tx("⚠ ")]));
+        nrow.appendChild(tx(act.name));
+        info.appendChild(nrow);
+        var meta=e("div",{fontSize:"11px",display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap",color:C.text2});
+        meta.appendChild(e("span",{color:stg.color,fontWeight:"700"},[tx(stg.short)]));
+        meta.appendChild(tx("· "+act.start+" – "+act.end));
+        if(others.length>0){
+          meta.appendChild(tx("· "));
+          others.forEach(function(o){meta.appendChild(badge(o.alias,o.prio==="definite"?"#e3f2fd":"#f5f5f5",o.prio==="definite"?"#1565c0":C.text2));meta.appendChild(tx(" "));});
+        }
+        info.appendChild(meta);
+        row.appendChild(info);
+        var rb=e("button",{background:C.surface2,border:"none",color:C.text3,fontSize:"16px",width:"28px",height:"28px",borderRadius:"7px",cursor:"pointer",flexShrink:"0"});
+        rb.appendChild(tx("×"));
+        (function(k2,d2,n){rb.addEventListener("click",function(){state.sel.delete(k2);savePlan();render();});})(k,d,act.name);
+        row.appendChild(rb);
+        root.appendChild(row);
+      });
     });
-    root.appendChild(grp);
   });
-  root.appendChild(e("div",{textAlign:"center",fontSize:"11px",color:"#333",marginTop:"12px"},[tx(plan.length+" "+(plan.length===1?"Act":"Acts")+" ausgewählt")]));
+  var total=plan.length,defs=plan.filter(function(a){return a.prio==="definite";}).length;
+  root.appendChild(e("div",{textAlign:"center",fontSize:"11px",color:C.text3,marginTop:"16px"},[tx("★ "+defs+" definitiv · ? "+(total-defs)+" vielleicht")]));
   return root;
 }
 
 // ── Gruppe ────────────────────────────────────────────────────────────────────
 function renderGruppe(){
-  var root=e("div",{padding:"14px 14px 48px"}),d=state.day;
-  // Build actName -> [people] map
+  var root=e("div",{padding:"14px 14px 48px",background:C.bg}),d=state.day;
   var actMap={};
   ACTS[d].forEach(function(act){
-    if(state.sel.has(mk(d,act.name))){actMap[act.name]=actMap[act.name]||[];actMap[act.name].push("Du");}
+    var p=state.sel.get(mk(d,act.name));
+    if(p){actMap[act.name]=actMap[act.name]||[];actMap[act.name].push({alias:"Du",prio:p});}
   });
   Object.keys(state.allPlans).forEach(function(alias){
     if(alias===state.alias)return;
-    ((state.allPlans[alias]||{})[d]||[]).forEach(function(name){
-      actMap[name]=actMap[name]||[];actMap[name].push(alias);
-    });
+    var dp=(state.allPlans[alias]||{})[d]||{};
+    ((dp.definite)||[]).forEach(function(n){actMap[n]=actMap[n]||[];actMap[n].push({alias:alias,prio:"definite"});});
+    ((dp.maybe)||[]).forEach(function(n){actMap[n]=actMap[n]||[];actMap[n].push({alias:alias,prio:"maybe"});});
   });
-  var hasAny=Object.keys(actMap).length>0;
-  if(!hasAny){
-    var emp=e("div",{textAlign:"center",padding:"56px 20px",color:"#333"});
+  if(!Object.keys(actMap).length){
+    var emp=e("div",{textAlign:"center",padding:"56px 20px",color:C.text3});
     emp.appendChild(e("div",{fontSize:"40px",marginBottom:"16px"},[tx("👥")]));
-    emp.appendChild(e("div",{fontSize:"14px",fontWeight:"800",marginBottom:"8px",color:"#555"},[tx("Noch niemand hat etwas ausgewählt")]));
-    emp.appendChild(e("div",{fontSize:"12px",color:"#444",lineHeight:"1.7"},[tx("Wählt Acts in 201EAlle Bands201C aus 2014 dann erscheinen sie hier.")]));
+    emp.appendChild(e("div",{fontSize:"14px",fontWeight:"800",marginBottom:"8px",color:C.text2},[tx("Noch niemand hat etwas ausgewaehlt")]));
+    emp.appendChild(e("div",{fontSize:"12px",lineHeight:"1.7"},[tx('In "Alle Bands" eintragen, dann erscheint es hier.')]));
     root.appendChild(emp);return root;
   }
-  root.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:"#888",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"8px",borderBottom:"1px solid #1e1e24"},[tx(DAYS[d].full+" · Gruppenplan")]));
+  root.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:C.text3,letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"8px",borderBottom:"1px solid "+C.border},[tx(DAYS[d].full+" · Gruppenplan")]));
   ACTS[d].filter(function(a){return actMap[a.name];}).forEach(function(act){
     var people=actMap[act.name],stg=stageOf(act.stage);
-    var row=e("div",{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",marginBottom:"6px",background:"#111116",borderRadius:"9px",borderLeft:"4px solid "+stg.color});
+    var row=e("div",{display:"flex",alignItems:"center",gap:"10px",padding:"10px 12px",marginBottom:"6px",background:C.surface,borderRadius:"10px",boxShadow:"0 1px 3px rgba(0,0,0,0.06)",borderLeft:"4px solid "+stg.color});
     var info=e("div",{flex:"1",minWidth:"0"});
     info.appendChild(e("div",{fontWeight:"800",fontSize:"13px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginBottom:"2px"},[tx(act.name)]));
-    info.appendChild(e("div",{fontSize:"10px",color:"#555"},[tx(stg.short+" · "+act.start+"–"+act.end)]));
+    info.appendChild(e("div",{fontSize:"10px",color:C.text3},[tx(stg.short+" · "+act.start+"–"+act.end)]));
     row.appendChild(info);
     var badges=e("div",{display:"flex",flexWrap:"wrap",gap:"4px",justifyContent:"flex-end",flexShrink:"0",maxWidth:"55%"});
-    people.forEach(function(person){
-      var isDu=person==="Du";
-      badges.appendChild(e("div",{padding:"3px 8px",borderRadius:"12px",fontSize:"11px",fontWeight:"700",background:isDu?"#ff4500":"#1e2a3a",color:isDu?"#fff":"#0096c7",whiteSpace:"nowrap"},[tx(person)]));
+    people.forEach(function(p){
+      var isDu=p.alias==="Du",isDef=p.prio==="definite";
+      var bg=isDu?(isDef?"#ff5500":"#ffccbc"):isDef?"#e3f2fd":"#f5f5f5";
+      var col=isDu?"#fff":isDef?"#1565c0":C.text2;
+      var b2=badge((isDef?"★ ":"? ")+p.alias,bg,col);
+      badges.appendChild(b2);
     });
     row.appendChild(badges);
     root.appendChild(row);
@@ -374,47 +422,47 @@ function renderGruppe(){
 
 // ── Special views ─────────────────────────────────────────────────────────────
 function renderThursday(){
-  var root=e("div",{padding:"14px 14px 48px"});
-  root.appendChild(e("div",{fontSize:"11px",color:"#ff4500",fontWeight:"900",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"10px",borderBottom:"1px solid #1e1e24"},[tx("Opening Night · Donnerstag, 25. Juni")]));
-  var card=e("div",{background:"#111116",borderRadius:"12px",padding:"18px 16px",borderLeft:"4px solid #ff4500"});
-  card.appendChild(e("div",{fontSize:"16px",fontWeight:"900",color:"#fff",marginBottom:"4px"},[tx("Skaters Palace")]));
-  card.appendChild(e("div",{fontSize:"12px",color:"#666",marginBottom:"14px"},[tx("Einlass 18:30 Uhr · Beginn 19:00 Uhr")]));
+  var root=e("div",{padding:"14px 14px 48px",background:C.bg});
+  root.appendChild(e("div",{fontSize:"11px",color:C.accent,fontWeight:"900",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"10px",borderBottom:"1px solid "+C.border},[tx("Opening Night · Donnerstag, 25. Juni")]));
+  var c=e("div",{background:C.surface,borderRadius:"12px",padding:"18px 16px",borderLeft:"4px solid "+C.accent,boxShadow:"0 2px 8px rgba(0,0,0,0.08)"});
+  c.appendChild(e("div",{fontSize:"16px",fontWeight:"900",marginBottom:"4px"},[tx("Skaters Palace")]));
+  c.appendChild(e("div",{fontSize:"12px",color:C.text2,marginBottom:"14px"},[tx("Einlass 18:30 Uhr · Beginn 19:00 Uhr")]));
   var pills=e("div",{display:"flex",flexWrap:"wrap",gap:"8px",marginBottom:"16px"});
-  ["Backstabbed","DeathbyRomy","Malevolence"].forEach(function(n){pills.appendChild(e("div",{padding:"7px 14px",borderRadius:"20px",background:"#1a1a1e",color:"#ccc",fontWeight:"700",fontSize:"13px"},[tx(n)]));});
-  card.appendChild(pills);
-  var notice=e("div",{display:"flex",alignItems:"flex-start",gap:"8px",background:"#1f2a00",borderRadius:"8px",padding:"9px 12px"});
+  ["Backstabbed","DeathbyRomy","Malevolence"].forEach(function(n){pills.appendChild(e("div",{padding:"7px 14px",borderRadius:"20px",background:C.surface2,fontWeight:"700",fontSize:"13px"},[tx(n)]));});
+  c.appendChild(pills);
+  var notice=e("div",{display:"flex",alignItems:"flex-start",gap:"8px",background:"#e8f5e9",borderRadius:"8px",padding:"9px 12px"});
   notice.appendChild(e("span",{fontSize:"15px"},[tx("🎟")]));
-  notice.appendChild(e("span",{fontSize:"11px",color:"#b5e550",lineHeight:"1.5"},[tx("Kostenlos für alle Festivalbesuchenden")]));
-  card.appendChild(notice);root.appendChild(card);
-  root.appendChild(e("div",{fontSize:"11px",color:"#444",marginTop:"8px",textAlign:"center"},[tx("Reihenfolge nicht offiziell bestätigt")]));
+  notice.appendChild(e("span",{fontSize:"11px",color:"#2e7d32",lineHeight:"1.5"},[tx("Kostenloser Eintritt für alle Festivalbesuchenden")]));
+  c.appendChild(notice);root.appendChild(c);
+  root.appendChild(e("div",{fontSize:"11px",color:C.text3,marginTop:"10px",textAlign:"center"},[tx("Reihenfolge nicht offiziell bestätigt")]));
   return root;
 }
 
 function renderMastership(){
-  var root=e("div",{padding:"14px 14px 48px"});
-  root.appendChild(e("div",{fontSize:"11px",color:"#f0a500",fontWeight:"900",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"10px",borderBottom:"1px solid #1e1e24"},[tx("Münster Monster Mastership")]));
-  var card=e("div",{background:"#111116",borderRadius:"12px",padding:"18px 16px",borderLeft:"4px solid #f0a500",marginBottom:"16px"});
-  card.appendChild(e("div",{fontSize:"15px",fontWeight:"900",color:"#fff",marginBottom:"4px"},[tx("Halfpipe Showcase · Vert Legends")]));
-  card.appendChild(e("div",{fontSize:"12px",color:"#888",marginBottom:"12px"},[tx("Halle Münsterland · Fr 26.6. & Sa 27.6.")]));
-  var n1=e("div",{display:"flex",alignItems:"flex-start",gap:"8px",background:"#1f1600",borderRadius:"8px",padding:"9px 12px",marginBottom:"6px"});
+  var root=e("div",{padding:"14px 14px 48px",background:C.bg});
+  root.appendChild(e("div",{fontSize:"11px",color:"#c66900",fontWeight:"900",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"10px",borderBottom:"1px solid "+C.border},[tx("Münster Monster Mastership")]));
+  var c=e("div",{background:C.surface,borderRadius:"12px",padding:"18px 16px",borderLeft:"4px solid #c66900",boxShadow:"0 2px 8px rgba(0,0,0,0.08)",marginBottom:"16px"});
+  c.appendChild(e("div",{fontSize:"15px",fontWeight:"900",marginBottom:"4px"},[tx("Halfpipe Showcase · Vert Legends")]));
+  c.appendChild(e("div",{fontSize:"12px",color:C.text2,marginBottom:"12px"},[tx("Halle Münsterland · Fr 26.6. & Sa 27.6.")]));
+  var n1=e("div",{display:"flex",alignItems:"flex-start",gap:"8px",background:"#fff8e1",borderRadius:"8px",padding:"9px 12px",marginBottom:"6px"});
   n1.appendChild(e("span",{fontSize:"14px",flexShrink:"0"},[tx("⏰")]));
-  n1.appendChild(e("span",{fontSize:"11px",color:"#f0a500",lineHeight:"1.5"},[tx("Genaue Zeiten noch nicht veröffentlicht")]));
-  card.appendChild(n1);
-  var n2=e("div",{display:"flex",alignItems:"flex-start",gap:"8px",background:"#1a001a",borderRadius:"8px",padding:"9px 12px"});
+  n1.appendChild(e("span",{fontSize:"11px",color:"#92400e",lineHeight:"1.5"},[tx("Genaue Zeiten noch nicht veröffentlicht")]));
+  c.appendChild(n1);
+  var n2=e("div",{display:"flex",alignItems:"flex-start",gap:"8px",background:"#f3e5f5",borderRadius:"8px",padding:"9px 12px"});
   n2.appendChild(e("span",{fontSize:"14px",flexShrink:"0"},[tx("🎟")]));
-  n2.appendChild(e("span",{fontSize:"11px",color:"#cc88ff",lineHeight:"1.5"},[tx("Separates Ticket erforderlich · Für Festivalbesuchende kostenlos")]));
-  card.appendChild(n2);root.appendChild(card);
-  root.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:"#888",letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"10px"},[tx("Bestätigte Rider")]));
-  var grid=e("div",{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px",marginBottom:"20px"});
+  n2.appendChild(e("span",{fontSize:"11px",color:"#6a1b9a",lineHeight:"1.5"},[tx("Separates Ticket erforderlich · für Festivalbesuchende kostenlos")]));
+  c.appendChild(n2);root.appendChild(c);
+  root.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:C.text3,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"10px"},[tx("Bestätigte Rider")]));
+  var grid=e("div",{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"20px"});
   RIDERS.forEach(function(name){
-    var rc=e("div",{padding:"10px 12px",background:"#111116",borderRadius:"8px",fontWeight:"700",fontSize:"13px",color:"#e0e0e0",display:"flex",alignItems:"center",gap:"8px"});
+    var rc=e("div",{padding:"10px 12px",background:C.surface,borderRadius:"8px",fontWeight:"700",fontSize:"13px",display:"flex",alignItems:"center",gap:"8px",boxShadow:"0 1px 3px rgba(0,0,0,0.06)"});
     rc.appendChild(e("span",{fontSize:"13px"},[tx("🛹")]));rc.appendChild(tx(name));grid.appendChild(rc);
   });
   root.appendChild(grid);
   return root;
 }
 
-// ── Main render ───────────────────────────────────────────────────────────────
+// ── Main ──────────────────────────────────────────────────────────────────────
 function render(){
   var app=document.getElementById("app");
   while(app.firstChild)app.removeChild(app.firstChild);
@@ -429,15 +477,11 @@ function render(){
   else app.appendChild(renderGruppe());
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
 var saved=localStorage.getItem("vs26_alias");
 if(saved){
   state.alias=saved;
   db.ref("/plans/"+saved).once("value",function(snap){
-    var plan=snap.val()||{};
-    ["friday","saturday"].forEach(function(d){(plan[d]||[]).forEach(function(n){state.sel.add(mk(d,n));});});
-    startListener();
-    render();
+    loadFromFirebase(snap.val());startListener();render();
   });
 }else{render();}
 </script>
