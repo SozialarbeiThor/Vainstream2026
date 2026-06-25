@@ -141,7 +141,7 @@ function setAlias(name){
   state.alias=name;
   localStorage.setItem("vs26_alias",name);
   db.ref("/plans/"+name).once("value",function(snap){
-    loadFromFirebase(snap.val());startListener();render();
+    loadFromFirebase(snap.val());startListener();render();setTimeout(function(){if(!isInstalled()&&!installDismissed()){if(deferredInstall||isIOS())showInstallBanner();}},1500);
   });
 }
 
@@ -849,6 +849,99 @@ function updateReminder() {
   } else {
     rd.style.display = "none";
   }
+}
+
+// ── PWA Install ───────────────────────────────────────────────────────────────
+var deferredInstall=null;
+window.addEventListener('beforeinstallprompt',function(ev){
+  ev.preventDefault();
+  deferredInstall=ev;
+  showInstallBanner();
+});
+
+function isInstalled(){
+  return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+}
+function isIOS(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
+}
+function installDismissed(){
+  return localStorage.getItem('vs26_install_dismissed')==='1';
+}
+
+function showInstallBanner(){
+  if(isInstalled()||installDismissed())return;
+  if(document.getElementById('vs-install-banner'))return;
+  var bar=e("div",{
+    position:"fixed",bottom:"0",left:"0",right:"0",zIndex:"200",
+    background:"#1a1a1a",color:"#fff",
+    padding:"12px 16px",display:"flex",alignItems:"center",gap:"10px",
+    boxShadow:"0 -2px 12px rgba(0,0,0,0.2)"
+  });
+  bar.id="vs-install-banner";
+  bar.appendChild(e("span",{fontSize:"20px"},[tx("📲")]));
+  var txt=e("div",{flex:"1",fontSize:"13px",lineHeight:"1.4"});
+  txt.appendChild(e("div",{fontWeight:"700"},[tx("App installieren")]));
+  txt.appendChild(e("div",{color:"#aaa",fontSize:"11px"},[tx("Schneller Zugriff vom Homescreen")]));
+  bar.appendChild(txt);
+  var installBtn=e("button",{padding:"8px 14px",borderRadius:"8px",border:"none",
+    background:C.accent,color:"#fff",fontWeight:"800",fontSize:"13px",cursor:"pointer",flexShrink:"0"});
+  installBtn.appendChild(tx("Installieren"));
+  installBtn.addEventListener("click",function(){
+    if(deferredInstall){
+      deferredInstall.prompt();
+      deferredInstall.userChoice.then(function(){
+        deferredInstall=null;
+        removeBanner();
+      });
+    } else if(isIOS()){
+      showIOSGuide();
+    }
+  });
+  var closeBtn=e("button",{background:"transparent",border:"none",color:"#888",
+    fontSize:"20px",cursor:"pointer",padding:"0 4px",flexShrink:"0"});
+  closeBtn.appendChild(tx("×"));
+  closeBtn.addEventListener("click",function(){
+    localStorage.setItem('vs26_install_dismissed','1');
+    removeBanner();
+  });
+  bar.appendChild(installBtn);bar.appendChild(closeBtn);
+  document.body.appendChild(bar);
+}
+
+function removeBanner(){
+  var b=document.getElementById('vs-install-banner');
+  if(b)b.remove();
+}
+
+function showIOSGuide(){
+  var ov=e("div",{position:"fixed",top:"0",left:"0",right:"0",bottom:"0",
+    background:"rgba(0,0,0,0.7)",zIndex:"300",display:"flex",
+    alignItems:"flex-end",justifyContent:"center",padding:"0"});
+  var box=e("div",{background:C.surface,borderRadius:"16px 16px 0 0",
+    padding:"24px 20px 40px",width:"100%",maxWidth:"400px"});
+  box.appendChild(e("div",{fontSize:"24px",textAlign:"center",marginBottom:"12px"},[tx("📱")]));
+  box.appendChild(e("div",{fontSize:"17px",fontWeight:"900",textAlign:"center",marginBottom:"8px"},[tx("Auf Homescreen speichern")]));
+  var steps=[
+    "①  Tippe auf das 📤 Teilen-Symbol unten in Safari",
+    "②  Wähle „Zum Home-Bildschirm“",
+    "③  Tippe oben rechts auf „Hinzufügen“"
+  ];
+  steps.forEach(function(s){
+    box.appendChild(e("div",{fontSize:"14px",color:C.text2,marginBottom:"10px",lineHeight:"1.5"},[tx(s)]));
+  });
+  var closeBtn=e("button",{width:"100%",padding:"13px",borderRadius:"10px",border:"none",
+    background:C.accent,color:"#fff",fontWeight:"800",fontSize:"15px",cursor:"pointer",marginTop:"8px"});
+  closeBtn.appendChild(tx("OK, verstanden"));
+  closeBtn.addEventListener("click",function(){
+    localStorage.setItem('vs26_install_dismissed','1');
+    document.body.removeChild(ov);
+    removeBanner();
+  });
+  box.appendChild(closeBtn);
+  ov.appendChild(box);
+  ov.addEventListener("click",function(ev){if(ev.target===ov)document.body.removeChild(ov);});
+  document.body.appendChild(ov);
 }
 function render(){
   var app=document.getElementById("app");
