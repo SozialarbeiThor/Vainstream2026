@@ -499,12 +499,140 @@ function renderMastership(){
   return root;
 }
 
+
+// ── Reminder ──────────────────────────────────────────────────────────────────
+var reminderTimer = null;
+
+function getFestivalDay() {
+  var d = new Date(), m = d.getMonth(), day = d.getDate();
+  // June (month 5) 26 = friday, 27 = saturday
+  if (m === 5 && day === 26) return "friday";
+  if (m === 5 && day === 27) return "saturday";
+  return null; // pre/post festival
+}
+
+function getNowMin() {
+  var d = new Date();
+  return d.getHours() * 60 + d.getMinutes();
+}
+
+function getUpcomingActs() {
+  if (!state.sel.size) return [];
+  var festDay = getFestivalDay();
+  var now = getNowMin();
+  var results = [];
+
+  var daysToCheck = festDay ? [festDay] : ["friday", "saturday"];
+  daysToCheck.forEach(function(d) {
+    ACTS[d].filter(function(a) { return state.sel.has(mk(d, a.name)); }).forEach(function(a) {
+      var sMin = toMin(a.start), eMin = toMin(a.end);
+      var status = null, diff = 0;
+      if (festDay) {
+        if (eMin <= now) return; // already done
+        if (sMin <= now) { status = "now"; diff = eMin - now; }
+        else if (sMin - now <= 90) { status = "soon"; diff = sMin - now; }
+      } else {
+        status = "upcoming"; diff = sMin;
+      }
+      if (status) results.push({name:a.name, stage:a.stage, start:a.start, end:a.end, day:d, prio:state.sel.get(mk(d,a.name)), status:status, diff:diff, startMin:sMin});
+    });
+  });
+
+  results.sort(function(a, b) {
+    var order = {now:0, soon:1, upcoming:2};
+    if (order[a.status] !== order[b.status]) return order[a.status] - order[b.status];
+    if (a.day !== b.day) return a.day === "friday" ? -1 : 1;
+    return a.startMin - b.startMin;
+  });
+  return results.slice(0, 2);
+}
+
+function buildReminderContent() {
+  var acts = getUpcomingActs();
+  if (!acts.length) return null;
+  var wrap = e("div", {padding:"8px 14px", display:"flex", flexDirection:"column", gap:"6px"});
+  acts.forEach(function(act) {
+    var stg = stageOf(act.stage);
+    var isNow = act.status === "now";
+    var isSoon = act.status === "soon";
+    var card = e("div", {
+      display:"flex", alignItems:"center", gap:"10px",
+      background: isNow ? "#fff3e0" : C.surface,
+      borderRadius:"10px", padding:"9px 12px",
+      borderLeft:"4px solid " + (isNow ? C.accent : stg.color),
+      boxShadow:"0 1px 4px rgba(0,0,0,0.08)"
+    });
+    // Status badge
+    var badgeTxt = isNow ? "🎸 JETZT" : isSoon ? "⏱ NEXT" : "📅 " + DAYS[act.day].label;
+    var badgeEl = e("div", {
+      fontSize:"10px", fontWeight:"900", letterSpacing:"0.5px",
+      color: isNow ? C.accent : stg.color,
+      flexShrink:"0", minWidth:"48px"
+    }, [tx(badgeTxt)]);
+    card.appendChild(badgeEl);
+    // Dot
+    card.appendChild(e("div", {width:"8px", height:"8px", borderRadius:"50%", background:stg.color, flexShrink:"0"}));
+    // Info
+    var info = e("div", {flex:"1", minWidth:"0"});
+    var nameEl = e("div", {fontWeight:"800", fontSize:"13px", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap"});
+    nameEl.appendChild(tx(act.name));
+    info.appendChild(nameEl);
+    var sub = e("div", {fontSize:"10px", color:C.text2, marginTop:"1px"});
+    sub.appendChild(tx(stg.short + " · " + act.start + "–" + act.end));
+    info.appendChild(sub);
+    card.appendChild(info);
+    // Countdown
+    var countdown = e("div", {textAlign:"right", flexShrink:"0"});
+    var countTxt, countColor;
+    if (isNow) {
+      countTxt = "noch " + act.diff + " min";
+      countColor = C.accent;
+    } else if (isSoon) {
+      countTxt = "in " + act.diff + " min";
+      countColor = act.diff <= 15 ? "#c62828" : C.text2;
+    } else {
+      countTxt = act.start + " Uhr";
+      countColor = C.text3;
+    }
+    countdown.appendChild(e("div", {fontSize:"12px", fontWeight:"800", color:countColor}, [tx(countTxt)]));
+    if (act.prio === "definite") countdown.appendChild(e("div", {fontSize:"9px", color:C.text3, marginTop:"1px"}, [tx("★ definitiv")]));
+    else countdown.appendChild(e("div", {fontSize:"9px", color:C.text3, marginTop:"1px"}, [tx("? vielleicht")]));
+    card.appendChild(countdown);
+    wrap.appendChild(card);
+  });
+  return wrap;
+}
+
+function updateReminder() {
+  var rd = document.getElementById("vs-reminder");
+  if (!rd) return;
+  var content = buildReminderContent();
+  while (rd.firstChild) rd.removeChild(rd.firstChild);
+  if (content) {
+    rd.style.display = "block";
+    rd.appendChild(content);
+  } else {
+    rd.style.display = "none";
+  }
+}
 function render(){
   var app=document.getElementById("app");
   while(app.firstChild)app.removeChild(app.firstChild);
   if(!state.alias){app.appendChild(renderLogin());return;}
   app.appendChild(renderHeader());
   app.appendChild(renderControls());
+  // Reminder banner
+  if (state.alias && (state.day==="friday"||state.day==="saturday"||!getFestivalDay())) {
+    var rd = e("div", {background:C.bg, borderBottom:"1px solid "+C.border});
+    rd.id = "vs-reminder";
+    var content = buildReminderContent();
+    if (content) rd.appendChild(content);
+    else rd.style.display = "none";
+    app.appendChild(rd);
+    if (reminderTimer) clearInterval(reminderTimer);
+    reminderTimer = setInterval(updateReminder, 30000);
+  }
+
   var d=state.day;
   if(d==="chat")app.appendChild(renderChat());
   else if(d==="thursday")app.appendChild(renderThursday());
