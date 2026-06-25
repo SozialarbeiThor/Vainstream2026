@@ -20,6 +20,7 @@ button,input{font-family:inherit}
 <body>
 <div id="app"></div>
 <script>
+var ACTS_FRIDAY=[{"name":"Rise Against","stage":"EMP Stage","start":"21:20","end":"22:30"},{"name":"Social Distortion","stage":"EMP Stage","start":"19:20","end":"20:10"},{"name":"All Time Low","stage":"EMP Stage","start":"17:30","end":"18:20"},{"name":"Set It Off","stage":"EMP Stage","start":"15:55","end":"16:35"},{"name":"I Killed The Prom Queen","stage":"EMP Stage","start":"14:35","end":"15:15"},{"name":"Wargasm","stage":"EMP Stage","start":"13:30","end":"14:00"},{"name":"Landmvrks","stage":"Murder Stage","start":"20:15","end":"21:15"},{"name":"Bury Tomorrow","stage":"Murder Stage","start":"18:25","end":"19:15"},{"name":"Pennywise","stage":"Murder Stage","start":"16:40","end":"17:25"},{"name":"Lionheart","stage":"Murder Stage","start":"15:15","end":"15:55"},{"name":"Dying Wish","stage":"Murder Stage","start":"14:00","end":"14:35"},{"name":"Siamese","stage":"Murder Stage","start":"13:00","end":"13:30"},{"name":"Sleep Theory","stage":"Rocknight Stage","start":"21:45","end":"22:30"},{"name":"The Menzingers","stage":"Rocknight Stage","start":"20:30","end":"21:15"},{"name":"La Dispute","stage":"Rocknight Stage","start":"19:15","end":"20:00"},{"name":"Shoreline","stage":"Rocknight Stage","start":"18:00","end":"18:45"},{"name":"Hi! Spencer","stage":"Rocknight Stage","start":"16:50","end":"17:30"},{"name":"The Ataris","stage":"Rocknight Stage","start":"15:40","end":"16:20"},{"name":"Massendefekt","stage":"Rocknight Stage","start":"14:30","end":"15:10"},{"name":"Still Talk","stage":"Rocknight Stage","start":"13:30","end":"14:00"},{"name":"Get The Shot","stage":"Green Hell Club Stage","start":"00:05","end":"01:00"},{"name":"Haywire","stage":"Green Hell Club Stage","start":"22:45","end":"23:30"},{"name":"End It","stage":"Green Hell Club Stage","start":"20:20","end":"21:00"},{"name":"Death Lens","stage":"Green Hell Club Stage","start":"19:10","end":"19:50"},{"name":"Initiate","stage":"Green Hell Club Stage","start":"18:00","end":"18:40"},{"name":"Whispers","stage":"Green Hell Club Stage","start":"17:00","end":"17:30"},{"name":"Volatile Ways","stage":"Green Hell Club Stage","start":"16:00","end":"16:30"},{"name":"Heartless Human Harvest","stage":"Green Hell Club Stage","start":"15:00","end":"15:30"}];var ACTS_SATURDAY=[{"name":"Architects","stage":"EMP Stage","start":"21:20","end":"22:30"},{"name":"Hollywood Undead","stage":"EMP Stage","start":"19:20","end":"20:10"},{"name":"Bloodywood","stage":"EMP Stage","start":"17:45","end":"18:30"},{"name":"Thrown","stage":"EMP Stage","start":"16:15","end":"16:55"},{"name":"We Came As Romans","stage":"EMP Stage","start":"14:50","end":"15:30"},{"name":"Magnolia Park","stage":"EMP Stage","start":"13:35","end":"14:10"},{"name":"Boundaries","stage":"EMP Stage","start":"12:30","end":"13:00"},{"name":"Sondaschule","stage":"Murder Stage","start":"20:15","end":"21:15"},{"name":"Black Veil Brides","stage":"Murder Stage","start":"18:30","end":"19:20"},{"name":"Grandson","stage":"Murder Stage","start":"17:00","end":"17:45"},{"name":"Alkaline Trio","stage":"Murder Stage","start":"15:35","end":"16:15"},{"name":"Future Palace","stage":"Murder Stage","start":"14:10","end":"14:50"},{"name":"Raum27","stage":"Murder Stage","start":"13:00","end":"13:35"},{"name":"The Pretty Wild","stage":"Murder Stage","start":"12:00","end":"12:30"},{"name":"Suicidal Tendencies","stage":"Rocknight Stage","start":"21:30","end":"22:30"},{"name":"Agnostic Front","stage":"Rocknight Stage","start":"20:15","end":"21:00"},{"name":"Smoke Blow","stage":"Rocknight Stage","start":"19:00","end":"19:45"},{"name":"Dog Eat Dog","stage":"Rocknight Stage","start":"17:50","end":"18:30"},{"name":"Delinquent Habits","stage":"Rocknight Stage","start":"16:40","end":"17:20"},{"name":"Scene Queen","stage":"Rocknight Stage","start":"15:35","end":"16:10"},{"name":"Pöbel MC","stage":"Rocknight Stage","start":"14:30","end":"15:05"},{"name":"The Flatliners","stage":"Rocknight Stage","start":"13:30","end":"14:00"},{"name":"Attic109","stage":"Rocknight Stage","start":"12:30","end":"13:00"},{"name":"The Casualties","stage":"Green Hell Club Stage","start":"00:05","end":"01:00"},{"name":"Ways Away","stage":"Green Hell Club Stage","start":"22:45","end":"23:30"},{"name":"TX2","stage":"Green Hell Club Stage","start":"21:30","end":"22:15"},{"name":"Nevertel","stage":"Green Hell Club Stage","start":"20:20","end":"21:00"},{"name":"TSS","stage":"Green Hell Club Stage","start":"18:40","end":"19:20"},{"name":"Footballhead","stage":"Green Hell Club Stage","start":"17:30","end":"18:10"},{"name":"Mimi Barks","stage":"Green Hell Club Stage","start":"16:30","end":"17:00"},{"name":"Gridiron","stage":"Green Hell Club Stage","start":"15:30","end":"16:00"}];
 firebase.initializeApp({
   apiKey:"AIzaSyAPjYv5RLlaS9eJk-8OyISy7zZ8WsVs7bw",
   authDomain:"vainstream-5096e.firebaseapp.com",
@@ -40,7 +41,7 @@ var STAGES=[
   {id:"Green Hell Club Stage",short:"GREEN HELL", color:"#2e7d32"}
 ];
 var RIDERS=["Tony Magnusson","Mike Crum","Kevin Staab","Hans Puttis Jacobsson","Renton Miller","Nicky Guerrero","Lester Kasai","Anders Tellen"];
-var ACTS={friday:[{"name":"Rise Against","stage":"EMP Stage","start":"21:20","end":"22:30"},{"name":"Social Distortion","stage":"EMP Stage","start":"19:20","end":"20:10"},{"name":"All Time Low","stage":"EMP Stage","start":"17:30","end":"18:20"},{"name":"Set It Off","stage":"EMP Stage","start":"15:55","end":"16:35"},{"name":"I Killed The Prom Queen","stage":"EMP Stage","start":"14:35","end":"15:15"},{"name":"Wargasm","stage":"EMP Stage","start":"13:30","end":"14:00"},{"name":"Landmvrks","stage":"Murder Stage","start":"20:15","end":"21:15"},{"name":"Bury Tomorrow","stage":"Murder Stage","start":"18:25","end":"19:15"},{"name":"Pennywise","stage":"Murder Stage","start":"16:40","end":"17:25"},{"name":"Lionheart","stage":"Murder Stage","start":"15:15","end":"15:55"},{"name":"Dying Wish","stage":"Murder Stage","start":"14:00","end":"14:35"},{"name":"Siamese","stage":"Murder Stage","start":"13:00","end":"13:30"},{"name":"Sleep Theory","stage":"Rocknight Stage","start":"21:45","end":"22:30"},{"name":"The Menzingers","stage":"Rocknight Stage","start":"20:30","end":"21:15"},{"name":"La Dispute","stage":"Rocknight Stage","start":"19:15","end":"20:00"},{"name":"Shoreline","stage":"Rocknight Stage","start":"18:00","end":"18:45"},{"name":"Hi! Spencer","stage":"Rocknight Stage","start":"16:50","end":"17:30"},{"name":"The Ataris","stage":"Rocknight Stage","start":"15:40","end":"16:20"},{"name":"Massendefekt","stage":"Rocknight Stage","start":"14:30","end":"15:10"},{"name":"Still Talk","stage":"Rocknight Stage","start":"13:30","end":"14:00"},{"name":"Get The Shot","stage":"Green Hell Club Stage","start":"00:05","end":"01:00"},{"name":"Haywire","stage":"Green Hell Club Stage","start":"22:45","end":"23:30"},{"name":"End It","stage":"Green Hell Club Stage","start":"20:20","end":"21:00"},{"name":"Death Lens","stage":"Green Hell Club Stage","start":"19:10","end":"19:50"},{"name":"Initiate","stage":"Green Hell Club Stage","start":"18:00","end":"18:40"},{"name":"Whispers","stage":"Green Hell Club Stage","start":"17:00","end":"17:30"},{"name":"Volatile Ways","stage":"Green Hell Club Stage","start":"16:00","end":"16:30"},{"name":"Heartless Human Harvest","stage":"Green Hell Club Stage","start":"15:00","end":"15:30"}],saturday:[{"name":"Architects","stage":"EMP Stage","start":"21:20","end":"22:30"},{"name":"Hollywood Undead","stage":"EMP Stage","start":"19:20","end":"20:10"},{"name":"Bloodywood","stage":"EMP Stage","start":"17:45","end":"18:30"},{"name":"Thrown","stage":"EMP Stage","start":"16:15","end":"16:55"},{"name":"We Came As Romans","stage":"EMP Stage","start":"14:50","end":"15:30"},{"name":"Magnolia Park","stage":"EMP Stage","start":"13:35","end":"14:10"},{"name":"Boundaries","stage":"EMP Stage","start":"12:30","end":"13:00"},{"name":"Sondaschule","stage":"Murder Stage","start":"20:15","end":"21:15"},{"name":"Black Veil Brides","stage":"Murder Stage","start":"18:30","end":"19:20"},{"name":"Grandson","stage":"Murder Stage","start":"17:00","end":"17:45"},{"name":"Alkaline Trio","stage":"Murder Stage","start":"15:35","end":"16:15"},{"name":"Future Palace","stage":"Murder Stage","start":"14:10","end":"14:50"},{"name":"Raum27","stage":"Murder Stage","start":"13:00","end":"13:35"},{"name":"The Pretty Wild","stage":"Murder Stage","start":"12:00","end":"12:30"},{"name":"Suicidal Tendencies","stage":"Rocknight Stage","start":"21:30","end":"22:30"},{"name":"Agnostic Front","stage":"Rocknight Stage","start":"20:15","end":"21:00"},{"name":"Smoke Blow","stage":"Rocknight Stage","start":"19:00","end":"19:45"},{"name":"Dog Eat Dog","stage":"Rocknight Stage","start":"17:50","end":"18:30"},{"name":"Delinquent Habits","stage":"Rocknight Stage","start":"16:40","end":"17:20"},{"name":"Scene Queen","stage":"Rocknight Stage","start":"15:35","end":"16:10"},{"name":"Pöbel MC","stage":"Rocknight Stage","start":"14:30","end":"15:05"},{"name":"The Flatliners","stage":"Rocknight Stage","start":"13:30","end":"14:00"},{"name":"Attic109","stage":"Rocknight Stage","start":"12:30","end":"13:00"},{"name":"The Casualties","stage":"Green Hell Club Stage","start":"00:05","end":"01:00"},{"name":"Ways Away","stage":"Green Hell Club Stage","start":"22:45","end":"23:30"},{"name":"TX2","stage":"Green Hell Club Stage","start":"21:30","end":"22:15"},{"name":"Nevertel","stage":"Green Hell Club Stage","start":"20:20","end":"21:00"},{"name":"TSS","stage":"Green Hell Club Stage","start":"18:40","end":"19:20"},{"name":"Footballhead","stage":"Green Hell Club Stage","start":"17:30","end":"18:10"},{"name":"Mimi Barks","stage":"Green Hell Club Stage","start":"16:30","end":"17:00"},{"name":"Gridiron","stage":"Green Hell Club Stage","start":"15:30","end":"16:00"}]};
+var ACTS={friday:ACTS_FRIDAY,saturday:ACTS_SATURDAY};
 var DAYS={
   thursday: {label:"Do 25.6.",full:"Donnerstag, 25. Juni",  ds:null,  de:null },
   friday:   {label:"Fr 26.6.",full:"Freitag, 26. Juni",     ds:13*60, de:25*60},
@@ -48,8 +49,7 @@ var DAYS={
   mastership:{label:"🛹 MMM",full:"Monster Mastership",ds:null,de:null}
 };
 
-// sel: Map of key -> 'definite'|'maybe'
-var state={day:"friday",view:"all",sel:new Map(),alias:"",allPlans:{}};
+var state={day:"friday",view:"all",sel:new Map(),alias:"",allPlans:{},chatMsgs:[]};
 var fbOff=null;
 
 function toMin(t){var p=t.split(":"),h=+p[0],m=+p[1];return h<6?(h+24)*60+m:h*60+m;}
@@ -93,13 +93,21 @@ function e(tag,st,ch){
   return el;
 }
 function tx(s){return document.createTextNode(s);}
+function badge(label,bg,col){return e("div",{display:"inline-flex",alignItems:"center",padding:"2px 8px",borderRadius:"10px",fontSize:"10px",fontWeight:"700",letterSpacing:"0.5px",background:bg,color:col},[tx(label)]);}
 
 // ── Firebase ──────────────────────────────────────────────────────────────────
 function startListener(){
   if(fbOff){fbOff();fbOff=null;}
-  var ref=db.ref("/plans");
-  ref.on("value",function(snap){state.allPlans=snap.val()||{};render();});
-  fbOff=function(){ref.off();};
+  var planRef=db.ref("/plans");
+  planRef.on("value",function(snap){state.allPlans=snap.val()||{};render();});
+  db.ref("/chat").orderByChild("ts").limitToLast(100).on("value",function(snap){
+    var msgs=[];
+    snap.forEach(function(c){msgs.push(c.val());});
+    state.chatMsgs=msgs;
+    var mc=document.getElementById("vs-chat-msgs");
+    if(mc)updateChatMsgs(mc);
+  });
+  fbOff=function(){planRef.off();db.ref("/chat").off();};
 }
 
 function savePlan(){
@@ -118,8 +126,8 @@ function loadFromFirebase(plan){
   state.sel=new Map();
   ["friday","saturday"].forEach(function(d){
     var dp=(plan||{})[d]||{};
-    ((dp.definite)||[]).forEach(function(n){state.sel.set(mk(d,n),"definite");});
-    ((dp.maybe)||[]).forEach(function(n){state.sel.set(mk(d,n),"maybe");});
+    (dp.definite||[]).forEach(function(n){state.sel.set(mk(d,n),"definite");});
+    (dp.maybe||[]).forEach(function(n){state.sel.set(mk(d,n),"maybe");});
   });
 }
 
@@ -129,15 +137,14 @@ function setAlias(name){
   state.alias=name;
   localStorage.setItem("vs26_alias",name);
   db.ref("/plans/"+name).once("value",function(snap){
-    loadFromFirebase(snap.val());
-    startListener();render();
+    loadFromFirebase(snap.val());startListener();render();
   });
 }
 
 function changeAlias(){
   if(!confirm("Name ändern?"))return;
   if(fbOff){fbOff();fbOff=null;}
-  state.alias="";state.allPlans={};
+  state.alias="";state.allPlans={};state.chatMsgs=[];
   localStorage.removeItem("vs26_alias");render();
 }
 
@@ -149,11 +156,50 @@ function toggleAct(d,name){
   savePlan();render();
 }
 
-// ── DOM helpers ───────────────────────────────────────────────────────────────
-function card(style,ch){return e("div",Object.assign({background:C.surface,borderRadius:"12px",padding:"16px"},style||{}),ch);}
-function badge(label,bg,col){return e("div",{display:"inline-flex",alignItems:"center",padding:"2px 8px",borderRadius:"10px",fontSize:"10px",fontWeight:"700",letterSpacing:"0.5px",background:bg,color:col},[tx(label)]);}
+function sendMsg(text){
+  if(!text.trim()||!state.alias)return;
+  db.ref("/chat").push({alias:state.alias,text:text.trim(),ts:Date.now()});
+}
 
-// ── Login ─────────────────────────────────────────────────────────────────────
+// ── Chat helpers ──────────────────────────────────────────────────────────────
+function updateChatMsgs(container){
+  while(container.firstChild)container.removeChild(container.firstChild);
+  if(!state.chatMsgs.length){
+    var emp=e("div",{textAlign:"center",padding:"48px 20px",color:C.text3});
+    emp.appendChild(e("div",{fontSize:"40px",marginBottom:"12px"},[tx("💬")]));
+    emp.appendChild(e("div",{fontSize:"14px",fontWeight:"700",color:C.text2,marginBottom:"6px"},[tx("Noch keine Nachrichten")]));
+    emp.appendChild(e("div",{fontSize:"12px"},[tx("Schreib die erste!")]));
+    container.appendChild(emp);
+  } else {
+    var prevAlias="";
+    state.chatMsgs.forEach(function(msg){
+      var isMe=msg.alias===state.alias;
+      var d=new Date(msg.ts),ts=pad2(d.getHours())+":"+pad2(d.getMinutes());
+      var showMeta=msg.alias!==prevAlias;prevAlias=msg.alias;
+      var row=e("div",{display:"flex",flexDirection:"column",alignItems:isMe?"flex-end":"flex-start",marginBottom:"4px"});
+      if(showMeta){
+        var meta=e("div",{fontSize:"10px",color:C.text3,margin:"8px 4px 3px",fontWeight:"600"});
+        meta.appendChild(tx(isMe?"Du · "+ts:msg.alias+" · "+ts));
+        row.appendChild(meta);
+      }
+      var bubble=e("div",{
+        maxWidth:"78%",padding:"9px 13px",
+        borderRadius:isMe?"16px 16px 4px 16px":"16px 16px 16px 4px",
+        background:isMe?C.accent:C.surface,
+        color:isMe?"#fff":C.text1,
+        fontSize:"15px",lineHeight:"1.45",
+        boxShadow:"0 1px 3px rgba(0,0,0,0.08)",
+        wordBreak:"break-word"
+      });
+      bubble.appendChild(tx(msg.text));
+      row.appendChild(bubble);
+      container.appendChild(row);
+    });
+  }
+  container.scrollTop=container.scrollHeight;
+}
+
+// ── Views ─────────────────────────────────────────────────────────────────────
 function renderLogin(){
   var root=e("div",{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",padding:"32px 20px",background:C.bg});
   root.appendChild(e("div",{fontSize:"28px",fontWeight:"900",letterSpacing:"2px",color:C.accent,marginBottom:"4px"},[tx("VAINSTREAM")]));
@@ -172,15 +218,12 @@ function renderLogin(){
   return root;
 }
 
-// ── Header ────────────────────────────────────────────────────────────────────
 function renderHeader(){
   var h=e("div",{background:C.surface,borderBottom:"1px solid "+C.border,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:"0",zIndex:"50"});
-  var left=e("div",{});
   var title=e("div",{fontSize:"18px",fontWeight:"900",letterSpacing:"2px",lineHeight:"1"});
   title.appendChild(e("span",{color:C.accent},[tx("VAINSTREAM ")]));
   title.appendChild(e("span",{color:C.text1},[tx("2026")]));
-  left.appendChild(title);
-  h.appendChild(left);
+  h.appendChild(title);
   var b=e("button",{background:C.surface2,border:"none",color:C.text2,padding:"6px 12px",borderRadius:"20px",fontSize:"12px",fontWeight:"700",cursor:"pointer"});
   b.appendChild(tx("👤 "+state.alias));
   b.addEventListener("click",changeAlias);
@@ -188,14 +231,25 @@ function renderHeader(){
   return h;
 }
 
-// ── Controls ──────────────────────────────────────────────────────────────────
 function renderControls(){
   var wrap=e("div",{padding:"10px 14px 0",background:C.surface,borderBottom:"1px solid "+C.border});
   var tabs=e("div",{display:"flex",gap:"5px",marginBottom:"8px"});
-  [{k:"thursday",l:"Do 25.6."},{k:"friday",l:"Fr 26.6."},{k:"saturday",l:"Sa 27.6."},{k:"mastership",l:"🛹 MMM"}].forEach(function(item){
-    var btn=e("button",{flex:"1",padding:"8px 4px",borderRadius:"8px",border:"none",cursor:"pointer",fontWeight:"800",fontSize:"11px",letterSpacing:"0.5px",textTransform:item.k==="mastership"?"none":"uppercase",background:state.day===item.k?C.accent:C.surface2,color:state.day===item.k?"#fff":C.text2,transition:"all 0.15s"});
+  var dayTabs=[{k:"thursday",l:"Do 25.6."},{k:"friday",l:"Fr 26.6."},{k:"saturday",l:"Sa 27.6."},{k:"mastership",l:"🛹 MMM"},{k:"chat",l:"💬 Chat"}];
+  dayTabs.forEach(function(item){
+    var isChat=item.k==="chat";
+    var btn=e("button",{
+      flex:"1",padding:"8px 4px",borderRadius:"8px",border:"none",cursor:"pointer",
+      fontWeight:"800",fontSize:"11px",letterSpacing:isChat?"0":"0.5px",
+      textTransform:isChat?"none":"uppercase",
+      background:state.day===item.k?C.accent:C.surface2,
+      color:state.day===item.k?"#fff":C.text2,transition:"all 0.15s"
+    });
     btn.appendChild(tx(item.l));
-    btn.addEventListener("click",function(){state.day=item.k;if(item.k==="thursday"||item.k==="mastership")state.view="all";render();});
+    btn.addEventListener("click",function(){
+      state.day=item.k;
+      if(item.k==="thursday"||item.k==="mastership"||item.k==="chat")state.view="all";
+      render();
+    });
     tabs.appendChild(btn);
   });
   wrap.appendChild(tabs);
@@ -204,11 +258,7 @@ function renderControls(){
     var selCount=0;
     state.sel.forEach(function(v,k){if(k.startsWith(state.day+"::"))selCount++;});
     var views=e("div",{display:"flex",gap:"5px",paddingBottom:"10px"});
-    [
-      {k:"all",l:"Alle Bands"},
-      {k:"mine",l:"Mein Plan"+(selCount?" · "+selCount:"")},
-      {k:"gruppe",l:"👥 Gruppe"+(others?" · "+others:"")},
-    ].forEach(function(item){
+    [{k:"all",l:"Alle Bands"},{k:"mine",l:"Mein Plan"+(selCount?" · "+selCount:"")},{k:"gruppe",l:"👥 Gruppe"+(others?" · "+others:"")}].forEach(function(item){
       var btn=e("button",{flex:"1",padding:"7px 0",borderRadius:"8px",cursor:"pointer",fontWeight:"700",fontSize:"11px",border:"2px solid "+(state.view===item.k?C.accent:C.border),background:state.view===item.k?"#fff3f0":"transparent",color:state.view===item.k?C.accent:C.text2,transition:"all 0.15s"});
       btn.appendChild(tx(item.l));
       btn.addEventListener("click",function(){state.view=item.k;render();});
@@ -219,17 +269,35 @@ function renderControls(){
   return wrap;
 }
 
-// ── Timeline ──────────────────────────────────────────────────────────────────
+function renderChat(){
+  var HEADER_H=160;
+  var root=e("div",{display:"flex",flexDirection:"column",background:C.bg,height:"calc(100vh - "+HEADER_H+"px)"});
+  var msgs=e("div",{flex:"1",overflowY:"auto",padding:"10px 14px 6px",display:"flex",flexDirection:"column"});
+  msgs.id="vs-chat-msgs";
+  updateChatMsgs(msgs);
+  root.appendChild(msgs);
+  var bar=e("div",{padding:"10px 14px 16px",background:C.surface,borderTop:"1px solid "+C.border,display:"flex",gap:"8px",alignItems:"center",flexShrink:"0"});
+  var inp=document.createElement("input");
+  Object.assign(inp.style,{flex:"1",padding:"12px 16px",borderRadius:"24px",border:"1.5px solid "+C.border,background:C.bg,color:C.text1,fontSize:"15px",outline:"none"});
+  inp.placeholder="Nachricht...";
+  var btn=e("button",{padding:"11px 20px",borderRadius:"24px",border:"none",background:C.accent,color:"#fff",fontWeight:"800",fontSize:"15px",cursor:"pointer",flexShrink:"0"},[tx("→")]);
+  function doSend(){var v=inp.value.trim();if(!v)return;sendMsg(v);inp.value="";}
+  btn.addEventListener("click",doSend);
+  inp.addEventListener("keydown",function(ev){if(ev.key==="Enter")doSend();});
+  bar.appendChild(inp);bar.appendChild(btn);
+  root.appendChild(bar);
+  return root;
+}
+
 function renderTimeline(){
   var d=state.day,cfg=DAYS[d],totalW=(cfg.de-cfg.ds)*PPM,cf=calcConflicts();
   var root=e("div",{background:C.bg});
-  // Legend + hint
   var leg=e("div",{padding:"8px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",background:C.surface,borderBottom:"1px solid "+C.border});
   var legI=e("div",{display:"flex",gap:"14px",flexWrap:"wrap",alignItems:"center"});
   STAGES.forEach(function(s){
     var item=e("div",{display:"flex",alignItems:"center",gap:"5px"});
     item.appendChild(e("div",{width:"10px",height:"10px",borderRadius:"3px",background:s.color}));
-    item.appendChild(e("span",{fontSize:"11px",color:C.text2,fontWeight:"700"},[tx(s.short)]));
+    item.appendChild(e("span",{fontSize:"11px",color:C.text2,fontWeight:"600"},[tx(s.short)]));
     legI.appendChild(item);
   });
   leg.appendChild(legI);
@@ -238,10 +306,8 @@ function renderTimeline(){
   hint.appendChild(e("div",{fontSize:"9px",color:C.text3},[tx("1×=★ 2×=? 3×=frei")]));
   leg.appendChild(hint);
   root.appendChild(leg);
-  // Scroll
   var scroll=e("div",{overflowX:"auto",WebkitOverflowScrolling:"touch"});
   var wrap=e("div",{display:"flex",minWidth:(SIDEBAR_W+totalW+16)+"px"});
-  // Sidebar
   var sb=e("div",{width:SIDEBAR_W+"px",flexShrink:"0",position:"sticky",left:"0",zIndex:"20",background:C.surface,borderRight:"1px solid "+C.border});
   sb.appendChild(e("div",{height:RULER_H+"px",background:C.surface2,borderBottom:"1px solid "+C.border}));
   STAGES.forEach(function(s,si){
@@ -251,9 +317,7 @@ function renderTimeline(){
     row.appendChild(lbl);sb.appendChild(row);
   });
   wrap.appendChild(sb);
-  // Grid
   var grid=e("div",{position:"relative",width:totalW+"px",flexShrink:"0"});
-  // Ruler
   var ruler=e("div",{position:"relative",height:RULER_H+"px",background:C.surface2,borderBottom:"1px solid "+C.border});
   for(var m=cfg.ds;m<=cfg.de;m+=60){
     var tick=e("div",{position:"absolute",left:((m-cfg.ds)*PPM)+"px",top:"0",bottom:"0",borderLeft:"1px solid "+C.border,paddingLeft:"5px",display:"flex",alignItems:"center"});
@@ -271,15 +335,7 @@ function renderTimeline(){
       var prio=getPrio(d,act.name),isConf=cf.has(mk(d,act.name));
       var others=getOthers(d,act.name);
       var isDef=prio==="definite",isMaybe=prio==="maybe";
-      var block=e("div",{
-        position:"absolute",left:lft+"px",top:"5px",width:wid+"px",height:(ROW_H-10)+"px",
-        borderRadius:"6px",cursor:"pointer",padding:"3px 5px",overflow:"hidden",
-        background:isDef?stage.color:isMaybe?stage.color+"22":"transparent",
-        border:isDef?"2px solid "+stage.color:isMaybe?"2px dashed "+stage.color:"1px solid "+stage.color+"55",
-        boxShadow:isDef?"0 2px 8px "+stage.color+"44":"none",
-        transition:"all 0.15s",display:"flex",flexDirection:"column",justifyContent:"center",
-        outline:isConf?"2px solid #f59e0b":"none",outlineOffset:"-2px"
-      });
+      var block=e("div",{position:"absolute",left:lft+"px",top:"5px",width:wid+"px",height:(ROW_H-10)+"px",borderRadius:"6px",cursor:"pointer",padding:"4px 6px",overflow:"hidden",background:isDef?stage.color:isMaybe?stage.color+"22":"transparent",border:isDef?"2px solid "+stage.color:isMaybe?"2px dashed "+stage.color:"1px solid "+stage.color+"55",boxShadow:isDef?"0 2px 8px "+stage.color+"44":"none",transition:"all 0.15s",display:"flex",flexDirection:"column",justifyContent:"center",outline:isConf?"2px solid #f59e0b":"none",outlineOffset:"-2px"});
       var nm=e("div",{fontSize:"12px",fontWeight:"800",color:isDef?"#fff":isMaybe?stage.color:C.text2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",lineHeight:"1.2"});
       if(isDef)nm.appendChild(e("span",{},[tx("★ ")]));
       else if(isMaybe)nm.appendChild(e("span",{},[tx("? ")]));
@@ -305,11 +361,10 @@ function renderTimeline(){
     bt.appendChild(e("div",{fontSize:"11px",color:"#555",marginTop:"2px"},[tx("Skaters Palace · Sa 27.06. · ab 22:00 · Freier Eintritt mit Bändchen")]));
     banner.appendChild(bt);root.appendChild(banner);
   }
-  root.appendChild(e("div",{padding:"6px 14px 12px",fontSize:"10px",color:C.text3,textAlign:"center"},[tx("Antippen: ★ definitiv → ? vielleicht → frei")]));
+  root.appendChild(e("div",{padding:"6px 14px 12px",fontSize:"10px",color:C.text3,textAlign:"center"},[tx("Antippen: ★ definitiv → ? vielleicht → frei")]));
   return root;
 }
 
-// ── Mein Plan ─────────────────────────────────────────────────────────────────
 function renderMyPlan(){
   var root=e("div",{padding:"14px 14px 48px",background:C.bg}),cf=calcConflicts();
   var plan=[];
@@ -318,22 +373,17 @@ function renderMyPlan(){
       plan.push({name:a.name,stage:a.stage,start:a.start,end:a.end,day:d,prio:state.sel.get(mk(d,a.name))});
     });
   });
-  plan.sort(function(a,b){
-    if(a.day!==b.day)return a.day==="friday"?-1:1;
-    if(a.prio!==b.prio)return a.prio==="definite"?-1:1;
-    return toMin(a.start)-toMin(b.start);
-  });
+  plan.sort(function(a,b){if(a.day!==b.day)return a.day==="friday"?-1:1;if(a.prio!==b.prio)return a.prio==="definite"?-1:1;return toMin(a.start)-toMin(b.start);});
   if(!plan.length){
     var emp=e("div",{textAlign:"center",padding:"56px 20px",color:C.text3});
     emp.appendChild(e("div",{fontSize:"48px",marginBottom:"16px"},[tx("🎸")]));
     emp.appendChild(e("div",{fontSize:"15px",fontWeight:"800",marginBottom:"8px",color:C.text2},[tx("PLAN LEER")]));
-    emp.appendChild(e("div",{fontSize:"13px",color:C.text3,lineHeight:"1.7"},[tx('In "Alle Bands" eine Band antippen.')]));
+    emp.appendChild(e("div",{fontSize:"13px",lineHeight:"1.7"},[tx("In "Alle Bands" eine Band antippen.")]));
     root.appendChild(emp);return root;
   }
   if(cf.size>0){
     root.appendChild(e("div",{background:"#fff8e1",border:"1px solid #f59e0b",borderRadius:"8px",padding:"10px 12px",marginBottom:"14px",display:"flex",gap:"8px",alignItems:"flex-start",fontSize:"12px",color:"#92400e"},[
-      e("span",{flexShrink:"0"},[tx("⚠️")]),
-      tx("Zeitüberschneidung — markierte Acts überlappen sich.")
+      e("span",{flexShrink:"0"},[tx("⚠️")]),tx("Zeitüberschneidung — markierte Acts überlappen sich.")
     ]));
   }
   ["friday","saturday"].forEach(function(d){
@@ -342,7 +392,7 @@ function renderMyPlan(){
       if(!acts.length)return;
       var grpHead=e("div",{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px",marginTop:"16px"});
       grpHead.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:C.text3,letterSpacing:"1.5px",textTransform:"uppercase"},[tx(DAYS[d].full)]));
-      grpHead.appendChild(prio==="definite"?badge("★ DEFINITIV","#fff3e0",C.accent):badge("? VIELLEICHT","#f5f5f5",C.text2));
+      grpHead.appendChild(prio==="definite"?badge("★ DEFINITIV","#fff3e0",C.accent):badge("? VIELLEICHT","#f0f0f2",C.text2));
       root.appendChild(grpHead);
       acts.forEach(function(act){
         var stg=stageOf(act.stage),k=mk(d,act.name),isConf=cf.has(k),isDef=prio==="definite";
@@ -351,22 +401,19 @@ function renderMyPlan(){
         row.style.borderLeft="4px solid "+(isDef?stg.color:stg.color+"88");
         row.appendChild(e("div",{fontSize:"16px",flexShrink:"0"},[tx(isDef?"★":"?")]));
         var info=e("div",{flex:"1",minWidth:"0"});
-        var nrow=e("div",{fontWeight:"800",fontSize:"13px",display:"flex",alignItems:"center",gap:"6px",marginBottom:"3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"});
+        var nrow=e("div",{fontWeight:"800",fontSize:"14px",display:"flex",alignItems:"center",gap:"6px",marginBottom:"3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"});
         if(isConf)nrow.appendChild(e("span",{color:"#f59e0b",flexShrink:"0"},[tx("⚠ ")]));
         nrow.appendChild(tx(act.name));
         info.appendChild(nrow);
         var meta=e("div",{fontSize:"11px",display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap",color:C.text2});
         meta.appendChild(e("span",{color:stg.color,fontWeight:"700"},[tx(stg.short)]));
         meta.appendChild(tx("· "+act.start+" – "+act.end));
-        if(others.length>0){
-          meta.appendChild(tx("· "));
-          others.forEach(function(o){meta.appendChild(badge(o.alias,o.prio==="definite"?"#e3f2fd":"#f5f5f5",o.prio==="definite"?"#1565c0":C.text2));meta.appendChild(tx(" "));});
-        }
+        if(others.length>0){meta.appendChild(tx("· "));others.forEach(function(o){meta.appendChild(badge((o.prio==="definite"?"★ ":"? ")+o.alias,o.prio==="definite"?"#e3f2fd":"#f5f5f5",o.prio==="definite"?"#1565c0":C.text2));meta.appendChild(tx(" "));});}
         info.appendChild(meta);
         row.appendChild(info);
         var rb=e("button",{background:C.surface2,border:"none",color:C.text3,fontSize:"16px",width:"28px",height:"28px",borderRadius:"7px",cursor:"pointer",flexShrink:"0"});
         rb.appendChild(tx("×"));
-        (function(k2,d2,n){rb.addEventListener("click",function(){state.sel.delete(k2);savePlan();render();});})(k,d,act.name);
+        (function(k2){rb.addEventListener("click",function(){state.sel.delete(k2);savePlan();render();});})(k);
         row.appendChild(rb);
         root.appendChild(row);
       });
@@ -377,25 +424,20 @@ function renderMyPlan(){
   return root;
 }
 
-// ── Gruppe ────────────────────────────────────────────────────────────────────
 function renderGruppe(){
   var root=e("div",{padding:"14px 14px 48px",background:C.bg}),d=state.day;
   var actMap={};
-  ACTS[d].forEach(function(act){
-    var p=state.sel.get(mk(d,act.name));
-    if(p){actMap[act.name]=actMap[act.name]||[];actMap[act.name].push({alias:"Du",prio:p});}
-  });
+  ACTS[d].forEach(function(act){var p=state.sel.get(mk(d,act.name));if(p){actMap[act.name]=actMap[act.name]||[];actMap[act.name].push({alias:"Du",prio:p});}});
   Object.keys(state.allPlans).forEach(function(alias){
     if(alias===state.alias)return;
     var dp=(state.allPlans[alias]||{})[d]||{};
-    ((dp.definite)||[]).forEach(function(n){actMap[n]=actMap[n]||[];actMap[n].push({alias:alias,prio:"definite"});});
-    ((dp.maybe)||[]).forEach(function(n){actMap[n]=actMap[n]||[];actMap[n].push({alias:alias,prio:"maybe"});});
+    (dp.definite||[]).forEach(function(n){actMap[n]=actMap[n]||[];actMap[n].push({alias:alias,prio:"definite"});});
+    (dp.maybe||[]).forEach(function(n){actMap[n]=actMap[n]||[];actMap[n].push({alias:alias,prio:"maybe"});});
   });
   if(!Object.keys(actMap).length){
     var emp=e("div",{textAlign:"center",padding:"56px 20px",color:C.text3});
     emp.appendChild(e("div",{fontSize:"40px",marginBottom:"16px"},[tx("👥")]));
-    emp.appendChild(e("div",{fontSize:"14px",fontWeight:"800",marginBottom:"8px",color:C.text2},[tx("Noch niemand hat etwas ausgewaehlt")]));
-    emp.appendChild(e("div",{fontSize:"12px",lineHeight:"1.7"},[tx('In "Alle Bands" eintragen, dann erscheint es hier.')]));
+    emp.appendChild(e("div",{fontSize:"14px",fontWeight:"800",marginBottom:"8px",color:C.text2},[tx("Noch niemand hat etwas ausgewählt")]));
     root.appendChild(emp);return root;
   }
   root.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:C.text3,letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"8px",borderBottom:"1px solid "+C.border},[tx(DAYS[d].full+" · Gruppenplan")]));
@@ -409,18 +451,13 @@ function renderGruppe(){
     var badges=e("div",{display:"flex",flexWrap:"wrap",gap:"4px",justifyContent:"flex-end",flexShrink:"0",maxWidth:"55%"});
     people.forEach(function(p){
       var isDu=p.alias==="Du",isDef=p.prio==="definite";
-      var bg=isDu?(isDef?"#ff5500":"#ffccbc"):isDef?"#e3f2fd":"#f5f5f5";
-      var col=isDu?"#fff":isDef?"#1565c0":C.text2;
-      var b2=badge((isDef?"★ ":"? ")+p.alias,bg,col);
-      badges.appendChild(b2);
+      badges.appendChild(badge((isDef?"★ ":"? ")+p.alias,isDu?(isDef?C.accent:"#ffccbc"):isDef?"#e3f2fd":"#f5f5f5",isDu?"#fff":isDef?"#1565c0":C.text2));
     });
-    row.appendChild(badges);
-    root.appendChild(row);
+    row.appendChild(badges);root.appendChild(row);
   });
   return root;
 }
 
-// ── Special views ─────────────────────────────────────────────────────────────
 function renderThursday(){
   var root=e("div",{padding:"14px 14px 48px",background:C.bg});
   root.appendChild(e("div",{fontSize:"11px",color:C.accent,fontWeight:"900",letterSpacing:"2px",textTransform:"uppercase",marginBottom:"14px",paddingBottom:"10px",borderBottom:"1px solid "+C.border},[tx("Opening Night · Donnerstag, 25. Juni")]));
@@ -453,7 +490,7 @@ function renderMastership(){
   n2.appendChild(e("span",{fontSize:"11px",color:"#6a1b9a",lineHeight:"1.5"},[tx("Separates Ticket erforderlich · für Festivalbesuchende kostenlos")]));
   c.appendChild(n2);root.appendChild(c);
   root.appendChild(e("div",{fontSize:"10px",fontWeight:"900",color:C.text3,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:"10px"},[tx("Bestätigte Rider")]));
-  var grid=e("div",{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px",marginBottom:"20px"});
+  var grid=e("div",{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"});
   RIDERS.forEach(function(name){
     var rc=e("div",{padding:"10px 12px",background:C.surface,borderRadius:"8px",fontWeight:"700",fontSize:"13px",display:"flex",alignItems:"center",gap:"8px",boxShadow:"0 1px 3px rgba(0,0,0,0.06)"});
     rc.appendChild(e("span",{fontSize:"13px"},[tx("🛹")]));rc.appendChild(tx(name));grid.appendChild(rc);
@@ -462,7 +499,6 @@ function renderMastership(){
   return root;
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
 function render(){
   var app=document.getElementById("app");
   while(app.firstChild)app.removeChild(app.firstChild);
@@ -470,7 +506,8 @@ function render(){
   app.appendChild(renderHeader());
   app.appendChild(renderControls());
   var d=state.day;
-  if(d==="thursday")app.appendChild(renderThursday());
+  if(d==="chat")app.appendChild(renderChat());
+  else if(d==="thursday")app.appendChild(renderThursday());
   else if(d==="mastership")app.appendChild(renderMastership());
   else if(state.view==="all")app.appendChild(renderTimeline());
   else if(state.view==="mine")app.appendChild(renderMyPlan());
@@ -484,6 +521,7 @@ if(saved){
     loadFromFirebase(snap.val());startListener();render();
   });
 }else{render();}
+
 </script>
 </body>
 </html>
