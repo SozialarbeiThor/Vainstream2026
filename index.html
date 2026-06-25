@@ -31,7 +31,7 @@ firebase.initializeApp({
 });
 var db=firebase.database();
 
-var PPM=2.5,ROW_H=88,RULER_H=38,SIDEBAR_W=98;
+var PPM=2.5,ROW_H=106,RULER_H=44,SIDEBAR_W=112;
 var C={bg:"#f0f0f2",surface:"#ffffff",surface2:"#e8e8ec",border:"#d0d0d8",text1:"#1a1a1a",text2:"#555560",text3:"#90909a",accent:"#e84200"};
 var STAGES=[
   {id:"EMP Stage",            short:"EMP",        color:"#e84200"},
@@ -229,7 +229,7 @@ function renderTimeline(){
   STAGES.forEach(function(s){
     var item=e("div",{display:"flex",alignItems:"center",gap:"5px"});
     item.appendChild(e("div",{width:"10px",height:"10px",borderRadius:"3px",background:s.color}));
-    item.appendChild(e("span",{fontSize:"10px",color:C.text2,fontWeight:"600"},[tx(s.short)]));
+    item.appendChild(e("span",{fontSize:"11px",color:C.text2,fontWeight:"700"},[tx(s.short)]));
     legI.appendChild(item);
   });
   leg.appendChild(legI);
@@ -246,7 +246,7 @@ function renderTimeline(){
   sb.appendChild(e("div",{height:RULER_H+"px",background:C.surface2,borderBottom:"1px solid "+C.border}));
   STAGES.forEach(function(s,si){
     var row=e("div",{height:ROW_H+"px",display:"flex",alignItems:"center",paddingLeft:"10px",borderBottom:"1px solid "+C.border,background:si%2===0?C.surface:C.surface2});
-    var lbl=e("div",{fontSize:"9px",fontWeight:"800",color:s.color,letterSpacing:"0.5px",textTransform:"uppercase",lineHeight:"1.5"});
+    var lbl=e("div",{fontSize:"11px",fontWeight:"900",color:s.color,letterSpacing:"0.5px",textTransform:"uppercase",lineHeight:"1.6"});
     s.short.split(" ").forEach(function(w){lbl.appendChild(e("div",{},[tx(w)]));});
     row.appendChild(lbl);sb.appendChild(row);
   });
@@ -257,7 +257,7 @@ function renderTimeline(){
   var ruler=e("div",{position:"relative",height:RULER_H+"px",background:C.surface2,borderBottom:"1px solid "+C.border});
   for(var m=cfg.ds;m<=cfg.de;m+=60){
     var tick=e("div",{position:"absolute",left:((m-cfg.ds)*PPM)+"px",top:"0",bottom:"0",borderLeft:"1px solid "+C.border,paddingLeft:"5px",display:"flex",alignItems:"center"});
-    tick.appendChild(e("span",{fontSize:"10px",color:C.text2,whiteSpace:"nowrap",fontWeight:"600"},[tx(fmtM(m))]));
+    tick.appendChild(e("span",{fontSize:"12px",color:C.text2,whiteSpace:"nowrap",fontWeight:"700"},[tx(fmtM(m))]));
     ruler.appendChild(tick);
   }
   grid.appendChild(ruler);
@@ -280,13 +280,13 @@ function renderTimeline(){
         transition:"all 0.15s",display:"flex",flexDirection:"column",justifyContent:"center",
         outline:isConf?"2px solid #f59e0b":"none",outlineOffset:"-2px"
       });
-      var nm=e("div",{fontSize:"9px",fontWeight:isDef?"900":"600",color:isDef?"#fff":isMaybe?stage.color:C.text2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",lineHeight:"1.2"});
+      var nm=e("div",{fontSize:"12px",fontWeight:"800",color:isDef?"#fff":isMaybe?stage.color:C.text2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",lineHeight:"1.2"});
       if(isDef)nm.appendChild(e("span",{},[tx("★ ")]));
       else if(isMaybe)nm.appendChild(e("span",{},[tx("? ")]));
       nm.appendChild(tx(act.name));
       block.appendChild(nm);
-      if(dur*PPM>50){
-        var sub=e("div",{fontSize:"8px",marginTop:"1px",color:isDef?"rgba(255,255,255,0.75)":C.text3,overflow:"hidden",whiteSpace:"nowrap"});
+      if(dur*PPM>55){
+        var sub=e("div",{fontSize:"10px",marginTop:"2px",color:isDef?"rgba(255,255,255,0.85)":C.text3,overflow:"hidden",whiteSpace:"nowrap"});
         if(others.length>0)sub.appendChild(tx("👥"+others.length+" "));
         sub.appendChild(tx(act.start+"–"+act.end));
         block.appendChild(sub);
