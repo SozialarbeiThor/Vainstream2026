@@ -102,7 +102,7 @@ function startListener(){
   planRef.on("value",function(snap){state.allPlans=snap.val()||{};render();});
   db.ref("/chat").orderByChild("ts").limitToLast(100).on("value",function(snap){
     var msgs=[];
-    snap.forEach(function(c){msgs.push(c.val());});
+    snap.forEach(function(c){var v=c.val();v._key=c.key;msgs.push(v);});
     state.chatMsgs=msgs;
     var mc=document.getElementById("vs-chat-msgs");
     if(mc)updateChatMsgs(mc);
@@ -162,6 +162,49 @@ function sendMsg(text){
 }
 
 // ── Chat helpers ──────────────────────────────────────────────────────────────
+
+var REACT_EMOJIS=["🎸","🤘","👍","🎉","⚡"];
+
+function safeKey(s){return s.replace(/[.#$\/\[\]]/g,"_");}
+
+function toggleReaction(msgKey,emoji){
+  if(!state.alias||!msgKey)return;
+  var ref=db.ref("/chat/"+msgKey+"/reactions/"+safeKey(state.alias));
+  ref.once("value",function(snap){
+    if(snap.val()===emoji)ref.remove();
+    else ref.set(emoji);
+  });
+}
+
+function deleteChat(){
+  // Show in-app confirmation overlay
+  var overlay=e("div",{position:"fixed",top:"0",left:"0",right:"0",bottom:"0",
+    background:"rgba(0,0,0,0.5)",zIndex:"999",display:"flex",
+    alignItems:"center",justifyContent:"center",padding:"24px"});
+  var box=e("div",{background:C.surface,borderRadius:"16px",padding:"24px 20px",
+    maxWidth:"320px",width:"100%",boxShadow:"0 8px 32px rgba(0,0,0,0.2)"});
+  box.appendChild(e("div",{fontSize:"22px",textAlign:"center",marginBottom:"12px"},[tx("🗑️")]));
+  box.appendChild(e("div",{fontSize:"16px",fontWeight:"800",textAlign:"center",marginBottom:"8px"},[tx("Chat leeren?")]));
+  box.appendChild(e("div",{fontSize:"13px",color:C.text2,textAlign:"center",marginBottom:"24px",lineHeight:"1.5"},[tx("Alle Nachrichten werden unwiderruflich gelöscht.")]));
+  var btns=e("div",{display:"flex",gap:"10px"});
+  var cancelBtn=e("button",{flex:"1",padding:"12px",borderRadius:"10px",border:"2px solid "+C.border,
+    background:"transparent",color:C.text1,fontWeight:"700",fontSize:"14px",cursor:"pointer"});
+  cancelBtn.appendChild(tx("Abbrechen"));
+  cancelBtn.addEventListener("click",function(){document.body.removeChild(overlay);});
+  var confirmBtn=e("button",{flex:"1",padding:"12px",borderRadius:"10px",border:"none",
+    background:"#c62828",color:"#fff",fontWeight:"800",fontSize:"14px",cursor:"pointer"});
+  confirmBtn.appendChild(tx("Ja, alles löschen"));
+  confirmBtn.addEventListener("click",function(){
+    document.body.removeChild(overlay);
+    db.ref("/chat").remove();
+  });
+  btns.appendChild(cancelBtn);btns.appendChild(confirmBtn);
+  box.appendChild(btns);
+  overlay.appendChild(box);
+  // Close on backdrop click
+  overlay.addEventListener("click",function(ev){if(ev.target===overlay)document.body.removeChild(overlay);});
+  document.body.appendChild(overlay);
+}
 function updateChatMsgs(container){
   while(container.firstChild)container.removeChild(container.firstChild);
   if(!state.chatMsgs.length){
@@ -192,7 +235,65 @@ function updateChatMsgs(container){
         wordBreak:"break-word"
       });
       bubble.appendChild(tx(msg.text));
-      row.appendChild(bubble);
+      // Wrap bubble + delete button for own messages
+      if(isMe){
+        var bwrap=e("div",{display:"flex",gap:"6px",alignItems:"flex-end"});
+        var delbtn=e("button",{background:"transparent",border:"none",color:C.text3,
+          cursor:"pointer",fontSize:"16px",padding:"0 2px",flexShrink:"0",lineHeight:"1"});
+        delbtn.appendChild(tx("×"));
+        (function(k){delbtn.addEventListener("click",function(){
+          db.ref("/chat/"+k).remove();
+        });})(msg._key);
+        bwrap.appendChild(delbtn);
+        bwrap.appendChild(bubble);
+        row.appendChild(bwrap);
+      }else{
+        row.appendChild(bubble);
+      }
+      // Reaction row
+      var reactions=(msg.reactions)||{};
+      var counts={};
+      Object.keys(reactions).forEach(function(a){var em=reactions[a];if(em)counts[em]=(counts[em]||0)+1;});
+      var myReact=reactions[safeKey(state.alias)]||null;
+      var hasReacts=Object.keys(counts).length>0;
+      var rrow=e("div",{display:"flex",gap:"4px",marginTop:"4px",flexWrap:"wrap",justifyContent:isMe?"flex-end":"flex-start"});
+      REACT_EMOJIS.forEach(function(emoji){
+        var cnt=counts[emoji]||0;
+        var active=myReact===emoji;
+        if(cnt===0&&!active)return; // only show used + own
+        var chip=e("div",{padding:"2px 8px",borderRadius:"12px",fontSize:"13px",cursor:"pointer",userSelect:"none",
+          background:active?(isMe?"rgba(0,0,0,0.15)":"#fff3e0"):C.surface2,
+          border:"1px solid "+(active?C.accent:C.border),
+          display:"flex",alignItems:"center",gap:"3px"});
+        chip.appendChild(tx(emoji));
+        if(cnt>0)chip.appendChild(e("span",{fontSize:"11px",fontWeight:"700",color:C.text2},[tx(String(cnt))]));
+        (function(em){chip.addEventListener("click",function(){toggleReaction(msg._key,em);});})(emoji);
+        rrow.appendChild(chip);
+      });
+      // Always show "+" to add reaction
+      var addBtn=e("div",{padding:"2px 8px",borderRadius:"12px",fontSize:"12px",cursor:"pointer",
+        background:C.surface2,border:"1px solid "+C.border,color:C.text3,fontWeight:"700"});
+      addBtn.appendChild(tx("+"));
+      // On click: show mini picker inline
+      addBtn.addEventListener("click",function(ev){
+        ev.stopPropagation();
+        var picker=document.getElementById("react-picker-"+msg._key);
+        if(picker){picker.remove();return;}
+        var p=e("div",{display:"flex",gap:"4px",padding:"4px 6px",background:C.surface,
+          border:"1px solid "+C.border,borderRadius:"12px",boxShadow:"0 2px 8px rgba(0,0,0,0.12)",
+          position:"absolute",zIndex:"100"});
+        p.id="react-picker-"+msg._key;
+        REACT_EMOJIS.forEach(function(emoji){
+          var btn=e("div",{fontSize:"18px",cursor:"pointer",padding:"2px 4px",borderRadius:"6px"});
+          btn.appendChild(tx(emoji));
+          (function(em){btn.addEventListener("click",function(e2){e2.stopPropagation();toggleReaction(msg._key,em);p.remove();});})(emoji);
+          p.appendChild(btn);
+        });
+        addBtn.style.position="relative";
+        addBtn.appendChild(p);
+      });
+      rrow.appendChild(addBtn);
+      row.appendChild(rrow);
       container.appendChild(row);
     });
   }
@@ -271,6 +372,14 @@ function renderControls(){
 
 function renderChat(){
   var root=e("div",{display:"flex",flexDirection:"column",background:C.bg});
+  var chatHeader=e("div",{padding:"8px 14px",background:C.surface,borderBottom:"1px solid "+C.border,
+    display:"flex",alignItems:"center",justifyContent:"space-between"});
+  chatHeader.appendChild(e("div",{fontSize:"13px",fontWeight:"700",color:C.text2},[tx("💬 Gruppenchat")]));
+  var delBtn=e("button",{background:"transparent",border:"none",color:C.text3,fontSize:"13px",cursor:"pointer",padding:"4px 8px",borderRadius:"6px"});
+  delBtn.appendChild(tx("🗑️ Chat leeren"));
+  delBtn.addEventListener("click",deleteChat);
+  chatHeader.appendChild(delBtn);
+  root.appendChild(chatHeader);
   var msgs=e("div",{height:"55vh",overflowY:"auto",padding:"10px 14px 6px",display:"flex",flexDirection:"column"});
   msgs.id="vs-chat-msgs";
   updateChatMsgs(msgs);
