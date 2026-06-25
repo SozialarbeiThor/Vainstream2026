@@ -346,7 +346,27 @@ function renderTimeline(){
         sub.appendChild(tx(act.start+"–"+act.end));
         block.appendChild(sub);
       }
-      block.addEventListener("click",function(){toggleAct(d,act.name);});
+      
+      if(wid>72){
+        var chatBtn=e("div",{
+          marginTop:"4px",padding:"2px 6px",borderRadius:"8px",
+          background:isDef?"rgba(255,255,255,0.25)":stage.color+"22",
+          display:"inline-flex",alignItems:"center",gap:"3px",
+          cursor:"pointer",fontSize:"9px",fontWeight:"700",
+          color:isDef?"#fff":stage.color,
+          alignSelf:"flex-start",flexShrink:"0"
+        });
+        chatBtn.appendChild(tx("💬 Wer mit?"));
+        chatBtn.addEventListener("click",function(ev){
+          ev.stopPropagation();
+          var msg="Wer kommt mit zu "+act.name+"? · "+stage.short+" · "+act.start+" Uhr";
+          sendMsg(msg);
+          state.day="chat";
+          render();
+        });
+        block.appendChild(chatBtn);
+      }
+block.addEventListener("click",function(){toggleAct(d,act.name);});
       row.appendChild(block);
     });
     grid.appendChild(row);
