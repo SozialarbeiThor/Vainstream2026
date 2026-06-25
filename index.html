@@ -307,10 +307,32 @@ function renderLogin(){
   var inp=document.createElement("input");
   Object.assign(inp.style,{width:"100%",padding:"13px 14px",borderRadius:"10px",border:"2px solid "+C.border,background:C.bg,color:C.text1,fontSize:"16px",marginBottom:"12px",outline:"none",display:"block"});
   inp.placeholder="z.B. Thorsten";inp.autocomplete="off";
+  // PIN field (hidden by default, shown for protected alias)
+  var pinWrap=e("div",{display:"none",marginBottom:"12px"});
+  var pinInp=document.createElement("input");
+  Object.assign(pinInp.style,{width:"100%",padding:"13px 14px",borderRadius:"10px",
+    border:"2px solid "+C.border,background:C.bg,color:C.text1,fontSize:"20px",
+    letterSpacing:"8px",textAlign:"center",outline:"none",display:"block"});
+  pinInp.type="password";pinInp.placeholder="••••";pinInp.maxLength=10;
+  pinWrap.appendChild(e("div",{fontSize:"11px",color:C.text3,marginBottom:"6px",textAlign:"center"},[tx("PIN für diesen Namen")]));
+  pinWrap.appendChild(pinInp);
+  var errMsg=e("div",{fontSize:"12px",color:"#c62828",textAlign:"center",marginBottom:"8px",display:"none"},[tx("Falsche PIN")]);
+  inp.addEventListener("input",function(){
+    pinWrap.style.display=inp.value.trim()==="Thorsten"?"block":"none";
+    errMsg.style.display="none";
+  });
+  function doLogin(){
+    var name=inp.value.trim();
+    if(name==="Thorsten"){
+      if(pinInp.value!=="1312"){errMsg.style.display="block";pinInp.value="";pinInp.focus();return;}
+    }
+    setAlias(name);
+  }
   var btn=e("button",{width:"100%",padding:"13px",borderRadius:"10px",border:"none",background:C.accent,color:"#fff",fontWeight:"800",fontSize:"15px",cursor:"pointer"},[tx("Los geht’s →")]);
-  btn.addEventListener("click",function(){setAlias(inp.value);});
-  inp.addEventListener("keydown",function(ev){if(ev.key==="Enter")setAlias(inp.value);});
-  wrap.appendChild(inp);wrap.appendChild(btn);root.appendChild(wrap);
+  btn.addEventListener("click",doLogin);
+  inp.addEventListener("keydown",function(ev){if(ev.key==="Enter"){if(inp.value.trim()==="Thorsten")pinInp.focus();else doLogin();}});
+  pinInp.addEventListener("keydown",function(ev){if(ev.key==="Enter")doLogin();});
+  wrap.appendChild(inp);wrap.appendChild(pinWrap);wrap.appendChild(errMsg);wrap.appendChild(btn);root.appendChild(wrap);
   root.appendChild(e("div",{fontSize:"11px",color:C.text3,marginTop:"20px",textAlign:"center"},[tx("Dein Name wird lokal gespeichert")]));
   setTimeout(function(){inp.focus();},80);
   return root;
