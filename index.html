@@ -197,7 +197,7 @@ function renderProfileOverlay(){
   var changeBtn=e("button",{flex:"1",padding:"11px",borderRadius:"10px",
     border:"2px solid "+C.border,background:"transparent",
     color:C.text2,fontWeight:"700",fontSize:"13px",cursor:"pointer"});
-  changeBtn.appendChild(tx("Name ändern"));
+  changeBtn.appendChild(tx("Abmelden"));
   changeBtn.addEventListener("click",function(){
     document.body.removeChild(overlay);
     changeAlias();
@@ -296,7 +296,7 @@ function updateChatMsgs(container){
         var meta=e("div",{fontSize:"10px",color:C.text3,margin:"8px 4px 3px",fontWeight:"600"});
         var senderAvatar=(state.allPlans[msg.alias]||{}).avatar||(isMe?state.avatar:"")||"👤";
         meta.appendChild(e("span",{fontSize:"13px"},[tx(senderAvatar)]));
-        meta.appendChild(tx(isMe?"Du · "+ts:msg.alias+" · "+ts));
+        meta.appendChild(tx((isMe?state.alias:msg.alias)+" · "+ts));
         row.appendChild(meta);
       }
       var bubble=e("div",{
